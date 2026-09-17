@@ -1,0 +1,11 @@
+# Deliberately permissive. The site is kept OUT of search by the
+# <meta name="robots" content="noindex, nofollow"> tag in index.html, not by this file.
+#
+# Blocking here would BACKFIRE: a crawler that is disallowed never fetches the page, so it
+# never sees the noindex tag, and Google can still list a URL it was forbidden to read if
+# anything links to it. Letting crawlers in is what lets them be told to go away.
+#
+# When the site is ready to be found, delete the noindex tag in index.html. This file
+# already says yes.
+User-agent: *
+Allow: /

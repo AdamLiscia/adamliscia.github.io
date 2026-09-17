@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adam Liscia — Full-stack engineer</title>
+<meta name="description" content="Full-stack engineer in New York. I build and ship production software in Python, TypeScript and AWS — a competitive gaming platform with 619 users and a React Native app on both app stores, and a second live site I designed, built and deployed alone.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.adamliscia.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Adam Liscia — Full-stack engineer">
+<meta property="og:description" content="I build and ship production software. Python, TypeScript, AWS.">
+<meta property="og:url" content="https://www.adamliscia.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23131E33'/><path d='M5 25 L13 19 L19 12 L27 5' stroke='%23D9A055' stroke-width='3' fill='none' stroke-linecap='round'/></svg>">
+
+<style>
+:root{
+  --paper:#E9EDF4;  --card:#F6F8FC;  --ink:#131E33;  --ink-2:#4B5A7C;
+  --brass:#9C6A24;  --brass-bright:#C9913F;  --rule:#C3CDDE;  --panel:#131E33;
+  --panel-text:#E4EAF6;  --panel-dim:#93A3C4;  --panel-rule:#2C3B5C;
+  --measure:1180px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0E1626;  --card:#151F33;  --ink:#DFE6F4;  --ink-2:#93A3C4;
+    --brass:#D9A055;  --brass-bright:#E8B871;  --rule:#26334E;  --panel:#080D18;
+    --panel-text:#E4EAF6;  --panel-dim:#93A3C4;  --panel-rule:#22304C;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+h1,h2,h3{font-family:Spectral,Georgia,serif; font-weight:600; line-height:1.12; margin:0; letter-spacing:-.015em}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--brass-bright); outline-offset:3px; border-radius:2px}
+
+/* ---- the axis rail: ticks mark section starts, like intervals on an axis ---- */
+.page{position:relative; max-width:var(--measure); margin:0 auto; padding:0 28px}
+.rail{display:none}
+@media (min-width:1000px){
+  .page{padding-left:104px}
+  .rail{
+    display:block; position:absolute; left:52px; top:0; bottom:0;
+    width:1px; background:var(--rule)
+  }
+  /* tick marks the start of each section — an interval on the axis, not an ornament */
+  section .page::before{
+    content:""; position:absolute; left:52px; top:85px;
+    width:16px; height:1px; background:var(--brass)
+  }
+}
+
+/* padding lives on .page so the rail spans the full section height */
+section{position:relative; padding:0}
+section .page{padding-top:76px; padding-bottom:76px}
+section + section{border-top:1px solid var(--rule)}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
+  letter-spacing:.15em; text-transform:uppercase; color:var(--brass); margin:0 0 22px
+}
+
+/* ---------------------------- hero ---------------------------- */
+.hero{background:var(--panel); color:var(--panel-text); border:0; padding:0; margin:0}
+.hero .page{padding-top:64px; padding-bottom:64px}
+.hero::before{display:none}
+.hero .rail{background:var(--panel-rule)}
+.hero-grid{display:grid; gap:52px; align-items:center}
+@media (min-width:940px){.hero-grid{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr); gap:64px}}
+.hero h1{
+  font-size:clamp(2.9rem,7.5vw,4.6rem); font-weight:700; letter-spacing:-.03em;
+  color:var(--panel-text); margin-bottom:14px
+}
+.role{
+  font-family:"IBM Plex Mono",monospace; font-size:13px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--brass-bright); margin:0 0 26px
+}
+.lead{font-size:1.13rem; color:var(--panel-dim); max-width:44ch; margin:0}
+.lead strong{color:var(--panel-text); font-weight:500}
+.hero-links{display:flex; flex-wrap:wrap; gap:10px; margin-top:32px}
+.btn{
+  display:inline-block; padding:11px 19px; border:1px solid var(--panel-rule);
+  border-radius:3px; text-decoration:none; font-size:14.5px; font-weight:500;
+  color:var(--panel-text); transition:border-color .18s, background .18s, color .18s
+}
+.btn:hover{border-color:var(--brass-bright); color:var(--brass-bright)}
+.btn.primary{background:var(--brass-bright); border-color:var(--brass-bright); color:#121A2B}
+.btn.primary:hover{filter:brightness(1.09); color:#121A2B}
+
+/* ---------------------------- chart ---------------------------- */
+.plot{width:100%}
+.plot svg{width:100%; height:auto; display:block; overflow:visible}
+.plot-cap{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--panel-dim);
+  margin:16px 0 0; letter-spacing:.04em
+}
+.grid-line{stroke:var(--panel-rule); stroke-width:1}
+.axis-txt{font-family:"IBM Plex Mono",monospace; font-size:10.5px; fill:var(--panel-dim); letter-spacing:.05em}
+.curve{fill:none; stroke:var(--brass-bright); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
+.endcap{fill:var(--brass-bright)}
+.endlabel{font-family:"IBM Plex Mono",monospace; font-size:16px; font-weight:500; fill:var(--brass-bright)}
+@media (prefers-reduced-motion:no-preference){
+  .curve{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw 1.7s .25s cubic-bezier(.32,.72,.3,1) forwards}
+  .fade{opacity:0; animation:fade .6s 1.5s ease forwards}
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+
+/* ---------------------------- work ---------------------------- */
+.project{padding:38px 0}
+.project + .project{margin-top:38px; border-top:1px solid var(--rule)}
+@media (min-width:1000px){
+  .project{display:grid; grid-template-columns:264px minmax(0,1fr); gap:56px; align-items:start}
+  .p-head{position:sticky; top:40px}
+}
+.p-body > :first-child{margin-top:0}
+.project h3{font-size:1.85rem; margin-bottom:5px}
+.pmeta{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2);
+  letter-spacing:.05em; margin:0 0 20px
+}
+.project p{margin:0 0 16px; max-width:66ch; color:var(--ink-2)}
+.project p strong{color:var(--ink); font-weight:600}
+.stats{display:flex; flex-wrap:wrap; gap:0; margin:24px 0; border:1px solid var(--rule); border-radius:3px; background:var(--card)}
+.stat{flex:1 1 130px; padding:15px 18px; border-right:1px solid var(--rule)}
+.stat:last-child{border-right:0}
+.stat b{display:block; font-family:Spectral,serif; font-size:1.65rem; font-weight:600; color:var(--brass); line-height:1.1}
+.stat span{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2)}
+.tags{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px; padding:0; list-style:none}
+.tags li{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:4px 10px;
+  border:1px solid var(--rule); border-radius:2px; color:var(--ink-2)
+}
+
+/* ---------------------------- stack ---------------------------- */
+.stack{display:grid; gap:26px}
+@media (min-width:700px){.stack{grid-template-columns:repeat(2,1fr); gap:26px 44px}}
+@media (min-width:1000px){.stack{grid-template-columns:repeat(3,1fr)}}
+.stack dt{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--brass); margin-bottom:7px
+}
+.stack dd{margin:0; color:var(--ink-2); font-size:15.5px; line-height:1.7}
+
+/* ---------------------------- before ---------------------------- */
+.before{display:grid; gap:30px; max-width:70ch}
+.before p{margin:0; color:var(--ink-2)}
+.before p strong{color:var(--ink); font-weight:600}
+.tl{list-style:none; margin:0; padding:0; display:grid; gap:2px}
+.tl li{display:grid; grid-template-columns:104px 1fr; gap:16px; padding:9px 0; border-top:1px solid var(--rule); font-size:15px}
+.tl li:last-child{border-bottom:1px solid var(--rule)}
+.tl time{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--brass); padding-top:3px}
+.tl span{color:var(--ink-2)}
+.tl b{color:var(--ink); font-weight:600}
+@media (max-width:520px){.tl li{grid-template-columns:1fr; gap:2px}}
+
+/* ---------------------------- contact ---------------------------- */
+.contact h2{font-size:clamp(1.9rem,4.5vw,2.6rem); margin-bottom:16px; max-width:26ch}
+.contact p{color:var(--ink-2); max-width:52ch; margin:0 0 30px}
+.clinks{display:flex; flex-wrap:wrap; gap:10px}
+.clinks a{
+  display:inline-block; padding:11px 19px; border:1px solid var(--rule); border-radius:3px;
+  text-decoration:none; font-size:14.5px; font-weight:500; transition:border-color .18s,color .18s
+}
+.clinks a:hover{border-color:var(--brass); color:var(--brass)}
+.clinks a.primary{background:var(--ink); border-color:var(--ink); color:var(--paper)}
+.clinks a.primary:hover{filter:brightness(1.25); color:var(--paper)}
+footer{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+  color:var(--ink-2); border-top:1px solid var(--rule); letter-spacing:.04em
+}
+footer .page{padding-top:30px; padding-bottom:50px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="page">
+    <span class="rail" aria-hidden="true"></span>
+    <div class="hero-grid">
+      <div>
+        <h1>Adam&nbsp;Liscia</h1>
+        <p class="role">Full-stack engineer · New York</p>
+        <p class="lead">I build and ship production software. <strong>Nerd Leagues</strong>
+          is a competitive gaming platform I co-founded and wrote the backend for — Flask
+          and MySQL on AWS, with a React Native app on both app stores. This is its
+          signup curve. <strong>Nerd Leagues TV</strong> is the second one, and I took
+          that one from empty repo to live site alone.</p>
+        <div class="hero-links">
+          <a class="btn primary" href="mailto:adamliscia@gmail.com">Get in touch</a>
+          <a class="btn" href="https://github.com/AdamLiscia">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/adam-liscia-b73555138/">LinkedIn</a>
+        </div>
+      </div>
+
+      <figure class="plot" style="margin:0">
+        <svg id="chart" viewBox="0 0 620 300" role="img"
+             aria-label="Line chart of Nerd Leagues registered users from May 2024 to September 2026, rising from 1 to 619, with growth accelerating sharply from January 2026.">
+        </svg>
+        <figcaption class="plot-cap">Nerd Leagues · registered users · May 2024 – Sep 2026</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="work">
+    <div class="page">
+      <span class="rail" aria-hidden="true"></span>
+      <p class="eyebrow">What I've built</p>
+
+      <article class="project">
+       <div class="p-head">
+        <h3>Nerd Leagues</h3>
+        <p class="pmeta">Co-founder &amp; full-stack engineer<br>Dec 2023 – present<br>nerdleagues.com</p>
+        <ul class="tags">
+          <li>Python</li><li>Flask</li><li>MySQL</li><li>React Native</li><li>Expo</li>
+          <li>AWS</li><li>Socket.IO</li><li>Anthropic API</li>
+        </ul>
+       </div>
+       <div class="p-body">
+        <p>A competitive platform for Magic: The Gathering players — league management,
+          ELO ratings, a deck builder, card search, and a set of public analysis tools.
+          I build the Flask backend and the MySQL schema alongside one other engineer,
+          across 98 merged pull requests.</p>
+        <p>The <strong>mobile app is entirely mine</strong> — every commit. 44,000 lines
+          of TypeScript across 37 screens, on the App Store and Google Play, with its own
+          Node and Express API that I wrote and deployed to EC2: sign-in with Apple and
+          Google, push notifications, S3 uploads, and a Socket.IO connection that keeps a
+          game in sync with the players on the web.</p>
+        <div class="stats">
+          <div class="stat"><b>619</b><span>users</span></div>
+          <div class="stat"><b>1,230</b><span>decks</span></div>
+          <div class="stat"><b>514</b><span>games</span></div>
+          <div class="stat"><b>144</b><span>articles</span></div>
+        </div>
+        <p>The work I'm proudest of is unglamorous. I <strong>cut deck-analysis latency
+          from 11 seconds to 25 milliseconds</strong> by replacing per-request calls to a
+          third-party API with materialized lookup tables and a seven-day cache — which is
+          what made it viable to take a logged-in-only tool and put it on the public,
+          indexed side of the site.</p>
+        <p>More recently I built the content pipeline on Anthropic's API: structured JSON
+          output, server-side link validation against a live inventory of every real path
+          on the site, and fail-open degradation so an API outage costs a feature and never
+          a user action.</p>
+       </div>
+      </article>
+
+      <article class="project">
+       <div class="p-head">
+        <h3>Nerd Leagues TV</h3>
+        <p class="pmeta">Solo — design to deployment<br>Jul 2026 – present<br><a href="https://nerdleagues.tv">nerdleagues.tv</a></p>
+        <ul class="tags">
+          <li>Python</li><li>Flask</li><li>React</li><li>Vite</li><li>MySQL</li>
+          <li>AWS RDS</li><li>nginx</li><li>Anthropic API</li>
+        </ul>
+       </div>
+       <div class="p-body">
+        <p>A curated TV network for tabletop gaming. Hand-picked Twitch and YouTube
+          creators across six games, aggregated into one player you never leave — you
+          change the channel, not the page. Official embeds only, no rehosting.</p>
+        <div class="stats">
+          <div class="stat"><b>223</b><span>creators</span></div>
+          <div class="stat"><b>3,466</b><span>videos</span></div>
+          <div class="stat"><b>6</b><span>networks</span></div>
+          <div class="stat"><b>24</b><span>days to live</span></div>
+        </div>
+        <p>I built and deployed this one alone, and the deployment is the part I'd point
+          at. It runs on a <strong>2 GB box that was already hosting three other
+          services</strong> — so the systemd unit is capped at 300 MB, because a new site
+          should never be able to take down an existing one. Gunicorn is pinned to a
+          single worker for a reason that's written down next to the setting.</p>
+        <p>Before it went public I found that the admin authorization check keyed off an
+          environment variable that defaults to <code>development</code>. One missing line
+          in a production config file would have left thirty destructive endpoints open.
+          I rebuilt the check and <strong>verified all nine authorization cases</strong>
+          against both local and proxied request shapes.</p>
+        <p>Ingestion is built around somebody else's rate limit. YouTube's search endpoint
+          costs 100 quota units a call, so I don't use it — a full audience sync across
+          <strong>240 channels costs 3 units and runs in 17 seconds</strong>. Every video
+          is classified by Claude against a per-game vocabulary, with a fallback path for
+          when the API isn't there.</p>
+       </div>
+      </article>
+
+      <article class="project">
+       <div class="p-head">
+        <h3>BarCraft</h3>
+        <p class="pmeta">Solo — every commit<br>Jun 2025 – present<br>On the iOS App Store</p>
+        <ul class="tags">
+          <li>FastAPI</li><li>SQLAlchemy</li><li>Alembic</li><li>TypeScript</li>
+          <li>Expo</li><li>MySQL</li><li>OpenAPI</li><li>pytest</li>
+        </ul>
+       </div>
+       <div class="p-body">
+        <p>A cocktail spec app for working bartenders — look up a spec, save your own,
+          batch it. <strong>Published to the iOS App Store</strong>, from a single Expo codebase
+          that also targets web and Android, against a FastAPI backend — with the API client
+          generated from OpenAPI so the two can't drift apart.</p>
+        <div class="stats">
+          <div class="stat"><b>300</b><span>tests passing</span></div>
+          <div class="stat"><b>20</b><span>migrations</span></div>
+          <div class="stat"><b>65</b><span>decisions logged</span></div>
+          <div class="stat"><b>4</b><span>apps, one repo</span></div>
+        </div>
+        <p>The interesting problem is ownership. A shared canonical library that every user
+          can edit, without duplicating it per user: editing a classic
+          <strong>forks it copy-on-write</strong>, resetting deletes the fork, and all of
+          that logic is server-authoritative rather than trusted to the client.</p>
+        <p>The batch calculator is the part I use at work. It's a pure, unit-tested
+          TypeScript package shared by all three clients — I run the batch cocktail program
+          at a Relais &amp; Châteaux property, and this is that math, written down.</p>
+        <p>Partway through I moved the production database <strong>from PostgreSQL to
+          MySQL</strong> — driver, models, migrations and a data-migration script, then
+          redeployed behind TLS. The 300 tests are the reason that was a decision rather
+          than a gamble.</p>
+       </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="page">
+      <span class="rail" aria-hidden="true"></span>
+      <p class="eyebrow">What I work in</p>
+      <dl class="stack">
+        <div><dt>Languages</dt><dd>Python, JavaScript, TypeScript, SQL</dd></div>
+        <div><dt>Backend</dt><dd>Flask, FastAPI, Node, Express, SQLAlchemy, Pydantic, REST, OpenAPI, WebSockets</dd></div>
+        <div><dt>Frontend &amp; mobile</dt><dd>React Native, Expo, Jinja2, Tailwind</dd></div>
+        <div><dt>Data</dt><dd>MySQL, PostgreSQL, query optimization, ETL and rollup pipelines</dd></div>
+        <div><dt>AI</dt><dd>Anthropic API, structured output, LLM classification pipelines</dd></div>
+        <div><dt>Infrastructure</dt><dd>AWS EC2, RDS and S3, nginx, gunicorn, systemd, TLS, Cloudflare, Git</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="before">
+    <div class="page">
+      <span class="rail" aria-hidden="true"></span>
+      <p class="eyebrow">Before this</p>
+      <div class="before">
+        <p>I studied <strong>mathematics at Stony Brook</strong> and spent seven years
+          teaching it — geometry and statistics for the NYC Department of Education, then
+          curriculum design for homeschooled students, where I also taught Python. Around
+          a hundred private students along the way, from pre-algebra to Calculus II.</p>
+        <p>I've bartended the whole time, and still do. It's why BarCraft exists, and it's
+          where I learned that a system nobody can run under pressure isn't finished.</p>
+        <ul class="tl">
+          <li><time>2009–2013</time><span><b>B.S. Mathematics</b>, Stony Brook University</span></li>
+          <li><time>2015–2017</time><span><b>Mathematics teacher</b>, NYC Department of Education</span></li>
+          <li><time>2018–2019</time><span><b>Data Science Immersive</b>, Flatiron School</span></li>
+          <li><time>2019–2021</time><span><b>Math &amp; Python teacher</b>, School for Young Performers</span></li>
+          <li><time>2023–</time><span><b>Nerd Leagues</b>, then <b>BarCraft</b> and <b>Nerd Leagues TV</b></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="page">
+      <span class="rail" aria-hidden="true"></span>
+      <p class="eyebrow">Get in touch</p>
+      <h2>I'm looking for engineering work, remote or around New York.</h2>
+      <p>Backend, full-stack, or anything where shipping the whole thing is the job.
+        The fastest way to reach me is email.</p>
+      <div class="clinks">
+        <a class="primary" href="mailto:adamliscia@gmail.com">adamliscia@gmail.com</a>
+        <a href="https://github.com/AdamLiscia">github.com/AdamLiscia</a>
+        <a href="https://www.linkedin.com/in/adam-liscia-b73555138/">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="page">
+      <span class="rail" aria-hidden="true"></span>
+      Adam Liscia · New York · Nerd Leagues figures September 2026 · Nerd Leagues TV and BarCraft August 2026
+    </div>
+  </footer>
+</main>
+
+<script>
+// Real cumulative signups, pulled from the Nerd Leagues database 2026-09-17.
+// Counts users with a non-NULL created_at, which is why the endpoint is 619 and not the
+// 620 that COUNT(*) returns — exactly one row has no signup timestamp. The stat card above
+// says 619 so the number and the curve agree; see career/metrics.md "Note on 488/489/490".
+const SERIES = [["2024-05",1],["2024-06",2],["2024-07",5],["2024-08",7],["2024-10",8],
+["2025-01",9],["2025-02",12],["2025-03",13],["2025-04",19],["2025-05",26],["2025-06",30],
+["2025-07",42],["2025-08",53],["2025-09",62],["2025-10",81],["2025-11",90],["2025-12",97],
+["2026-01",134],["2026-02",189],["2026-03",216],["2026-04",253],["2026-05",308],
+["2026-06",380],["2026-07",468],["2026-08",563],["2026-09",619]];
+
+(function drawChart(){
+  const svg = document.getElementById('chart');
+  if (!svg) return;
+  const W = 620, H = 300, L = 42, R = 46, T = 22, B = 34;
+  const iw = W - L - R, ih = H - T - B;
+  const yMax = 700;
+  const x = i => L + (i / (SERIES.length - 1)) * iw;
+  const y = v => T + ih - (v / yMax) * ih;
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (n, a) => { const e = document.createElementNS(NS, n);
+    for (const k in a) e.setAttribute(k, a[k]); return e; };
+
+  // horizontal gridlines + y labels
+  [0, 350, 700].forEach(v => {
+    svg.appendChild(el('line', {class:'grid-line', x1:L, x2:L+iw, y1:y(v), y2:y(v)}));
+    const t = el('text', {class:'axis-txt', x:L-10, y:y(v)+3.5, 'text-anchor':'end'});
+    t.textContent = v; svg.appendChild(t);
+  });
+
+  // x labels at year boundaries
+  [['2024-05','2024'],['2025-01','2025'],['2026-01','2026']].forEach(([key,label]) => {
+    const i = SERIES.findIndex(d => d[0] === key);
+    if (i < 0) return;
+    const t = el('text', {class:'axis-txt', x:x(i), y:H-B+20, 'text-anchor':'middle'});
+    t.textContent = label; svg.appendChild(t);
+  });
+
+  const d = SERIES.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p[1]).toFixed(1)}`).join(' ');
+  const path = el('path', {class:'curve', d});
+  svg.appendChild(path);
+
+  try {
+    const len = path.getTotalLength();
+    if (len) path.style.setProperty('--len', len.toFixed(1));
+  } catch (e) { /* getTotalLength unsupported — line just renders undrawn */ }
+
+  const last = SERIES.length - 1, lv = SERIES[last][1];
+  const dot = el('circle', {class:'endcap fade', cx:x(last), cy:y(lv), r:4.5});
+  const lab = el('text', {class:'endlabel fade', x:x(last)+11, y:y(lv)+5.5});
+  lab.textContent = lv;
+  svg.appendChild(dot); svg.appendChild(lab);
+})();
+</script>
+</body>
+</html>
