@@ -19,27 +19,33 @@ cd ~/career/site && python3 -m http.server 8899
   labels. The mono carries the measurement theme; Plex was drawn for an engineering company.
 - **The rail** — the vertical line at the left with a brass tick at each section start.
   It's an axis: the ticks mark intervals, they aren't ornament. Hidden below 1000px.
+- **Written for a non-engineer.** Rewritten 2026-10-17 after Adam called the first
+  version "way too technical". Each project says what it is, who uses it and what he did,
+  in plain words; the stack is one `Tools` line for technical readers. Keep it that way.
+- **Screenshots** live in `img/`. The phone images are the App Store marketing shots for
+  each app (pulled from Apple's lookup API, 600px wide); `tv-guide.jpg` is a capture of
+  nerdleagues.tv. Never capture nerdleagues.com while logged in — it shows Adam's account.
 - **The chart is the signature.** Real cumulative signup data pulled from the Nerd Leagues
   database on 2026-08-09, hardcoded in `SERIES` at the bottom of the file. The stroke
   draws itself on load and the animation is skipped under `prefers-reduced-motion`.
 
 ## Keeping the numbers honest
 
-The stat card and the chart endpoint both say **619** and a reader can compare them
-directly, so they must stay equal. Re-pulled 2026-09-17. Update all of these together:
+The stat card and the chart endpoint both say **724** and a reader can compare them
+directly, so they must stay equal. Re-pulled 2026-10-17. Update all of these together:
 
 | Where | Currently |
 |---|---|
-| `SERIES` array (bottom of `index.html`) | ends `["2026-09",619]` |
-| `.stat` card | `619` users, `1,230` decks, `514` games, `144` articles |
-| `<meta name="description">` | "619 users" |
-| SVG `aria-label` | "rising from 1 to 619" — and the month range |
-| `figcaption` | "May 2024 – Sep 2026" |
+| `SERIES` array (bottom of `index.html`) | ends `["2026-10",724]` |
+| `.stat` card | `724` members, `1,413` decks, `525` games, `155` articles |
+| `<meta name="description">` | "724 members" |
+| SVG `aria-label` | "rising from 1 to 724" — and the month range |
+| `figcaption` | "May 2024 – Oct 2026" |
 | footer | per-project dates, see below |
-| `yMax` + gridline array | `700` and `[0, 350, 700]` |
+| `yMax` + gridline array | `800` and `[0, 400, 800]` |
 
-**619, not 620.** The series counts users with a non-NULL `created_at`; `COUNT(*)` returns
-620 because one row has no signup timestamp. The stat card uses 619 so the number and the
+**724, not 726.** The series counts users with a non-NULL `created_at`; `COUNT(*)` returns
+726 because two rows have no signup timestamp. The stat card uses 724 so the number and the
 curve agree. See `career/metrics.md` → "Note on 488 / 489 / 490".
 
 **The y-axis is not automatic.** It was fixed at 0–500 and the real number passed it, which
@@ -68,7 +74,7 @@ Re-pull the whole series, don't append a point to the old one.
 
 ## Deploying to GitHub Pages
 
-`CNAME` is set to `www.adamliscia.com`. DNS is already half-configured — `www` CNAMEs to
+`CNAME` is set to `adamliscia.com` (the apex is canonical since 2026-10-22; www redirects to it). DNS is already half-configured — `www` CNAMEs to
 `adamliscia.github.io`, so the missing piece is the repo.
 
 1. Create a **public** repo named `adamliscia.github.io` (a user site serves at the root).
