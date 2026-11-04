@@ -12,22 +12,25 @@ cd ~/career/site && python3 -m http.server 8899
 
 ## Design notes
 
-- **Palette** — blueprint paper (`#E9EDF4`), ink navy (`#131E33`), brass (`#9C6A24`).
-  Deliberately cool rather than the cream-and-terracotta default. Full dark-mode set via
-  `prefers-color-scheme`.
-- **Type** — Spectral for display, IBM Plex Sans for body, IBM Plex Mono for data and
-  labels. The mono carries the measurement theme; Plex was drawn for an engineering company.
-- **The rail** — the vertical line at the left with a brass tick at each section start.
-  It's an axis: the ticks mark intervals, they aren't ornament. Hidden below 1000px.
-- **Written for a non-engineer.** Rewritten 2026-10-17 after Adam called the first
-  version "way too technical". Each project says what it is, who uses it and what he did,
-  in plain words; the stack is one `Tools` line for technical readers. Keep it that way.
-- **Screenshots** live in `img/`. The phone images are the App Store marketing shots for
-  each app (pulled from Apple's lookup API, 600px wide); `tv-guide.jpg` is a capture of
-  nerdleagues.tv. Never capture nerdleagues.com while logged in — it shows Adam's account.
-- **The chart is the signature.** Real cumulative signup data pulled from the Nerd Leagues
-  database on 2026-08-09, hardcoded in `SERIES` at the bottom of the file. The stroke
-  draws itself on load and the animation is skipped under `prefers-reduced-motion`.
+Redesigned 2026-11-04 when Adam asked for it to look "as if I paid someone $15,000 to build it".
+
+- **Palette**: bone (`#F5F4F0`), ink navy (`#101828`), brass (`#A0692A` / `#E2B26A` on dark).
+  Full dark-mode set via `prefers-color-scheme`.
+- **Type**: Instrument Serif for display (italic carries the accent), Geist for body and
+  Geist Mono for labels.
+- **Structure**: sticky blurred nav → big serif hero → the growth chart as a dark "board" →
+  three numbered case studies (**Nerd Leagues → BarCraft → Nerd Leagues TV**, the ranking in
+  `background.md`) → How I work → About + timeline → dark contact block.
+- **Copy follows the description spec**: Nerd Leagues carries one number, "nearly 800
+  players". BarCraft and TV carry none. No latency or security trivia. The text is cut from
+  `resume/master.md`.
+- **Motion**: scroll reveals, and the chart draws itself when it scrolls into view. All of it
+  is skipped under `prefers-reduced-motion`. Without JS everything renders visible
+  (`.js` gate).
+- **No photo.** The only headshot (`~/repo-archive/adam-liscia-headshot.png`) is a casual shot.
+  Add one only if Adam supplies a professional one.
+- **Written for a non-engineer.** Each project says what it is, who uses it and what he did.
+- **Screenshots** live in `img/`. Never capture nerdleagues.com while logged in.
 
 ## Keeping the numbers honest
 
@@ -37,7 +40,7 @@ directly, so they must stay equal. Re-pulled 2026-10-17. Update all of these tog
 | Where | Currently |
 |---|---|
 | `SERIES` array (bottom of `index.html`) | ends `["2026-10",724]` |
-| `.stat` card | `724` members, `1,413` decks, `525` games, `155` articles |
+| `.big` headline | `~800` players (the 2026-10-28 total, 778). The chart still ends at 724 from the 2026-10-17 pull; both are dated in the caption and footer |
 | `<meta name="description">` | "724 members" |
 | SVG `aria-label` | "rising from 1 to 724" — and the month range |
 | `figcaption` | "May 2024 – Oct 2026" |

@@ -3,402 +3,545 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Adam Liscia — Software engineer</title>
-<meta name="description" content="I'm Adam Liscia, a software engineer in New York. I build apps people use every day — Nerd Leagues, with 724 members and a phone app on both app stores; Nerd Leagues TV; and BarCraft, a cocktail app on the App Store.">
+<title>Adam Liscia — Software Engineer</title>
+<meta name="description" content="Adam Liscia is a software engineer in New York. He builds products people use every day: Nerd Leagues, used by nearly 800 Magic: The Gathering players; BarCraft, a cocktail app on the App Store; and Nerd Leagues TV.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="canonical" href="https://www.adamliscia.com/">
+<link rel="canonical" href="https://adamliscia.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Adam Liscia — Software engineer">
-<meta property="og:description" content="I build apps and websites that real people use every day.">
-<meta property="og:url" content="https://www.adamliscia.com/">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Adam Liscia — Software Engineer">
+<meta property="og:description" content="I build products that real people use every day.">
+<meta property="og:url" content="https://adamliscia.com/">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23131E33'/><path d='M5 25 L13 19 L19 12 L27 5' stroke='%23D9A055' stroke-width='3' fill='none' stroke-linecap='round'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101828'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' font-style='italic' text-anchor='middle' fill='%23E2B26A'>a</text></svg>">
+<script>document.documentElement.classList.add('js')</script>
 
 <style>
 :root{
-  --paper:#E9EDF4;  --card:#F6F8FC;  --ink:#131E33;  --ink-2:#4B5A7C;
-  --brass:#9C6A24;  --brass-bright:#C9913F;  --rule:#C3CDDE;  --panel:#131E33;
-  --panel-text:#E4EAF6;  --panel-dim:#93A3C4;  --panel-rule:#2C3B5C;
-  --measure:1180px;
+  --bg:#F5F4F0; --bg-2:#ECEAE3; --surface:#FFFFFF; --ink:#101828; --ink-2:#475467;
+  --ink-3:#7A8394; --line:#DEDBD2; --line-2:#CBC7BC; --accent:#A0692A;
+  --accent-soft:#E2B26A; --stage:#101828; --stage-2:#18223A; --stage-ink:#EEF1F6;
+  --stage-dim:#98A2B3; --stage-line:#273352; --ok:#2F9E6B;
+  --wrap:1240px; --gutter:clamp(20px,4.5vw,56px);
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --paper:#0E1626;  --card:#151F33;  --ink:#DFE6F4;  --ink-2:#93A3C4;
-    --brass:#D9A055;  --brass-bright:#E8B871;  --rule:#26334E;  --panel:#080D18;
-    --panel-text:#E4EAF6;  --panel-dim:#93A3C4;  --panel-rule:#22304C;
+    --bg:#0B0F19; --bg-2:#111726; --surface:#131A2A; --ink:#EEF1F6; --ink-2:#A9B2C3;
+    --ink-3:#7C879B; --line:#1F2738; --line-2:#2B3549; --accent:#E2B26A; --accent-soft:#E2B26A;
+    --stage:#121929; --stage-2:#182136; --stage-line:#26314A;
   }
 }
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:80px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
-  margin:0; background:var(--paper); color:var(--ink);
-  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:17px; line-height:1.65;
-  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+  font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility; overflow-x:hidden;
 }
-h1,h2,h3{font-family:Spectral,Georgia,serif; font-weight:600; line-height:1.12; margin:0; letter-spacing:-.015em}
-a{color:inherit}
-:focus-visible{outline:2.5px solid var(--brass-bright); outline-offset:3px; border-radius:2px}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+::selection{background:var(--accent-soft); color:#101828}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter)}
+.mono{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+.skip{position:absolute; left:-9999px} .skip:focus{left:16px; top:16px; z-index:99; background:var(--surface); padding:8px 12px; border-radius:6px}
 
-/* ---- the axis rail: ticks mark section starts, like intervals on an axis ---- */
-.page{position:relative; max-width:var(--measure); margin:0 auto; padding:0 28px}
-.rail{display:none}
-@media (min-width:1000px){
-  .page{padding-left:104px}
-  .rail{
-    display:block; position:absolute; left:52px; top:0; bottom:0;
-    width:1px; background:var(--rule)
-  }
-  /* tick marks the start of each section — an interval on the axis, not an ornament */
-  section .page::before{
-    content:""; position:absolute; left:52px; top:85px;
-    width:16px; height:1px; background:var(--brass)
-  }
+/* ---------------- nav ---------------- */
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:saturate(1.4) blur(14px); -webkit-backdrop-filter:saturate(1.4) blur(14px);
+  border-bottom:1px solid transparent; transition:border-color .3s;
 }
-
-/* padding lives on .page so the rail spans the full section height */
-section{position:relative; padding:0}
-section .page{padding-top:76px; padding-bottom:76px}
-section + section{border-top:1px solid var(--rule)}
-.eyebrow{
-  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
-  letter-spacing:.15em; text-transform:uppercase; color:var(--brass); margin:0 0 22px
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav .wrap{display:flex; align-items:center; justify-content:space-between; height:68px}
+.brand{font-family:var(--serif); font-size:24px; letter-spacing:-.01em; line-height:1}
+.brand i{color:var(--accent)}
+.nav ul{display:flex; gap:30px; list-style:none; margin:0; padding:0; align-items:center}
+.nav ul a{font-size:14.5px; color:var(--ink-2); transition:color .2s}
+.nav ul a:hover{color:var(--ink)}
+.nav .cta{
+  color:var(--bg) !important; background:var(--ink); padding:9px 16px; border-radius:999px;
+  font-weight:500; transition:transform .2s var(--ease), opacity .2s;
 }
+.nav .cta:hover{opacity:.88}
+@media (max-width:720px){.nav ul li.hide-sm{display:none} .nav ul{gap:18px}}
 
-/* ---------------------------- hero ---------------------------- */
-.hero{background:var(--panel); color:var(--panel-text); border:0; padding:0; margin:0}
-.hero .page{padding-top:64px; padding-bottom:64px}
-.hero::before{display:none}
-.hero .rail{background:var(--panel-rule)}
-.hero-grid{display:grid; gap:52px; align-items:center}
-@media (min-width:940px){.hero-grid{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr); gap:64px}}
+/* ---------------- hero ---------------- */
+.hero{padding:clamp(64px,11vw,150px) 0 clamp(56px,8vw,110px)}
+.status{
+  display:inline-flex; align-items:center; gap:10px; padding:7px 14px 7px 12px;
+  border:1px solid var(--line-2); border-radius:999px; font-size:13.5px; color:var(--ink-2);
+  background:var(--surface);
+}
+.status .dot{width:8px; height:8px; border-radius:50%; background:var(--ok); position:relative}
+.status .dot::after{content:""; position:absolute; inset:-4px; border-radius:50%; background:var(--ok); opacity:.25; animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.6); opacity:.45} 100%{transform:scale(1.9); opacity:0}}
+@media (prefers-reduced-motion:reduce){.status .dot::after{animation:none}}
 .hero h1{
-  font-size:clamp(2.9rem,7.5vw,4.6rem); font-weight:700; letter-spacing:-.03em;
-  color:var(--panel-text); margin-bottom:14px
+  font-family:var(--serif); font-weight:400; font-size:clamp(3rem,8.4vw,7.4rem);
+  line-height:.98; letter-spacing:-.025em; margin:34px 0 0; max-width:13ch;
 }
-.role{
-  font-family:"IBM Plex Mono",monospace; font-size:13px; letter-spacing:.13em;
-  text-transform:uppercase; color:var(--brass-bright); margin:0 0 26px
+.hero h1 em{font-style:italic; color:var(--accent)}
+.hero-foot{
+  display:grid; gap:36px; margin-top:clamp(40px,6vw,72px); padding-top:32px;
+  border-top:1px solid var(--line);
 }
-.lead{font-size:1.13rem; color:var(--panel-dim); max-width:44ch; margin:0}
-.lead strong{color:var(--panel-text); font-weight:500}
-.hero-links{display:flex; flex-wrap:wrap; gap:10px; margin-top:32px}
+@media (min-width:900px){.hero-foot{grid-template-columns:1.25fr 1fr 1fr; gap:56px}}
+.hero-foot p{margin:0; color:var(--ink-2); font-size:1.08rem; max-width:46ch}
+.hero-foot p strong{color:var(--ink); font-weight:500}
+.kv dt{color:var(--ink-3); margin-bottom:8px}
+.kv dd{margin:0; font-size:15.5px; color:var(--ink)}
+.kv dd + dt{margin-top:20px}
+.btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:28px}
 .btn{
-  display:inline-block; padding:11px 19px; border:1px solid var(--panel-rule);
-  border-radius:3px; text-decoration:none; font-size:14.5px; font-weight:500;
-  color:var(--panel-text); transition:border-color .18s, background .18s, color .18s
+  display:inline-flex; align-items:center; gap:10px; padding:13px 20px; border-radius:999px;
+  font-size:15px; font-weight:500; border:1px solid var(--line-2); background:var(--surface);
+  transition:transform .25s var(--ease), border-color .2s, background .2s;
 }
-.btn:hover{border-color:var(--brass-bright); color:var(--brass-bright)}
-.btn.primary{background:var(--brass-bright); border-color:var(--brass-bright); color:#121A2B}
-.btn.primary:hover{filter:brightness(1.09); color:#121A2B}
+.btn:hover{transform:translateY(-1px); border-color:var(--ink-3)}
+.btn.solid{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.btn svg{width:15px; height:15px; transition:transform .25s var(--ease)}
+.btn:hover svg{transform:translate(2px,-2px)}
 
-/* ---------------------------- chart ---------------------------- */
-.plot{width:100%}
-.plot svg{width:100%; height:auto; display:block; overflow:visible}
-.plot-cap{
-  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--panel-dim);
-  margin:16px 0 0; letter-spacing:.04em
+/* ---------------- section heads ---------------- */
+section{padding:clamp(72px,10vw,140px) 0}
+.sec-head{display:grid; gap:18px; margin-bottom:clamp(44px,6vw,80px)}
+@media (min-width:900px){.sec-head{grid-template-columns:220px 1fr; gap:40px; align-items:baseline}}
+.sec-head .mono{color:var(--accent)}
+.sec-head h2{
+  font-family:var(--serif); font-weight:400; font-size:clamp(2.3rem,5vw,4rem);
+  line-height:1.02; letter-spacing:-.02em; margin:0; max-width:18ch;
 }
-.grid-line{stroke:var(--panel-rule); stroke-width:1}
-.axis-txt{font-family:"IBM Plex Mono",monospace; font-size:10.5px; fill:var(--panel-dim); letter-spacing:.05em}
-.curve{fill:none; stroke:var(--brass-bright); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
-.endcap{fill:var(--brass-bright)}
-.endlabel{font-family:"IBM Plex Mono",monospace; font-size:16px; font-weight:500; fill:var(--brass-bright)}
+.sec-head h2 em{font-style:italic; color:var(--ink-3)}
+
+/* ---------------- signature: the growth chart ---------------- */
+.proof{padding-top:0}
+.board{
+  background:var(--stage); color:var(--stage-ink); border-radius:24px; overflow:hidden;
+  display:grid; position:relative;
+}
+@media (min-width:960px){.board{grid-template-columns:.8fr 1.2fr}}
+.board-copy{padding:clamp(32px,4.5vw,60px); display:flex; flex-direction:column; justify-content:space-between; gap:40px}
+.board-copy .mono{color:var(--accent-soft)}
+.board-copy h3{font-family:var(--serif); font-weight:400; font-size:clamp(2rem,3.6vw,3rem); line-height:1.05; letter-spacing:-.015em; margin:18px 0 0}
+.board-copy p{color:var(--stage-dim); margin:16px 0 0; max-width:40ch}
+.big{font-family:var(--serif); font-size:clamp(4.5rem,9vw,7.5rem); line-height:.9; letter-spacing:-.03em; color:var(--stage-ink)}
+.big small{display:block; font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--stage-dim); margin-top:14px}
+.board-plot{padding:clamp(20px,3vw,44px) clamp(16px,3vw,44px) clamp(24px,3vw,40px); background:linear-gradient(180deg,var(--stage-2),var(--stage)); border-left:1px solid var(--stage-line)}
+@media (max-width:959px){.board-plot{border-left:0; border-top:1px solid var(--stage-line)}}
+.board-plot svg{width:100%; height:auto; display:block; overflow:visible}
+.plot-cap{color:var(--stage-dim); margin:14px 0 0}
+.grid-line{stroke:var(--stage-line); stroke-width:1; stroke-dasharray:2 5}
+.axis-txt{font-family:var(--mono); font-size:10.5px; fill:var(--stage-dim); letter-spacing:.05em}
+.curve{fill:none; stroke:var(--accent-soft); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round}
+.area{fill:url(#fillGrad)}
+.endcap{fill:var(--accent-soft)}
+.endring{fill:none; stroke:var(--accent-soft); stroke-opacity:.35; stroke-width:1.5}
+.endlabel{font-family:var(--mono); font-size:15px; font-weight:500; fill:var(--stage-ink)}
 @media (prefers-reduced-motion:no-preference){
-  .curve{stroke-dasharray:var(--len); stroke-dashoffset:var(--len); animation:draw 1.7s .25s cubic-bezier(.32,.72,.3,1) forwards}
-  .fade{opacity:0; animation:fade .6s 1.5s ease forwards}
+  .js .curve{stroke-dasharray:var(--len); stroke-dashoffset:var(--len)}
+  .js .area,.js .fade{opacity:0}
+  .js .drawn .curve{animation:draw 1.9s .1s var(--ease) forwards}
+  .js .drawn .area{animation:fade 1s 1.1s ease forwards}
+  .js .drawn .fade{animation:fade .6s 1.6s ease forwards}
 }
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes fade{to{opacity:1}}
 
-/* ---------------------------- work ---------------------------- */
-.project{padding:38px 0}
-.project + .project{margin-top:38px; border-top:1px solid var(--rule)}
-@media (min-width:1000px){
-  .project{display:grid; grid-template-columns:264px minmax(0,1fr); gap:56px; align-items:start}
-  .p-head{position:sticky; top:40px}
+/* ---------------- work ---------------- */
+.case{padding:clamp(48px,6vw,80px) 0; border-top:1px solid var(--line)}
+.case:first-of-type{border-top:0; padding-top:0}
+.case-top{display:grid; gap:28px; margin-bottom:clamp(32px,4vw,52px)}
+@media (min-width:900px){.case-top{grid-template-columns:220px 1fr; gap:40px}}
+.case-num{font-family:var(--serif); font-style:italic; font-size:2.4rem; line-height:1; color:var(--ink-3)}
+.case h3{font-family:var(--serif); font-weight:400; font-size:clamp(2.6rem,6vw,4.8rem); line-height:.95; letter-spacing:-.025em; margin:0}
+.case .tagline{font-size:clamp(1.15rem,1.8vw,1.4rem); line-height:1.45; margin:18px 0 0; max-width:36ch; color:var(--ink-2)}
+.case-body{display:grid; gap:36px}
+@media (min-width:900px){.case-body{grid-template-columns:220px 1fr; gap:40px}}
+.meta{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 24px; align-content:start}
+@media (min-width:900px){.meta{grid-template-columns:1fr}}
+.meta dt{color:var(--ink-3); margin-bottom:6px}
+.meta dd{margin:0; font-size:15px}
+.meta dd a{border-bottom:1px solid var(--line-2); transition:border-color .2s, color .2s}
+.meta dd a:hover{color:var(--accent); border-color:var(--accent)}
+.meta dd a + a::before{content:" · "; color:var(--ink-3); border:0}
+.stage{
+  border-radius:22px; padding:clamp(28px,5vw,64px) clamp(16px,4vw,56px) 0;
+  background:var(--bg-2); overflow:hidden; position:relative;
 }
-.p-body > :first-child{margin-top:0}
-.project h3{font-size:1.85rem; margin-bottom:5px}
-.pmeta{
-  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2);
-  letter-spacing:.05em; margin:0 0 20px
-}
-.project p{margin:0 0 16px; max-width:66ch; color:var(--ink-2)}
-.project p strong{color:var(--ink); font-weight:600}
-.stats{display:flex; flex-wrap:wrap; gap:0; margin:24px 0; border:1px solid var(--rule); border-radius:3px; background:var(--card)}
-.stat{flex:1 1 130px; padding:15px 18px; border-right:1px solid var(--rule)}
-.stat:last-child{border-right:0}
-.stat b{display:block; font-family:Spectral,serif; font-size:1.65rem; font-weight:600; color:var(--brass); line-height:1.1}
-.stat span{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--ink-2)}
-.tags{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px; padding:0; list-style:none}
-.tags li{
-  font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:4px 10px;
-  border:1px solid var(--rule); border-radius:2px; color:var(--ink-2)
-}
+.stage.dark{background:var(--stage)}
+.phones{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(10px,2.4vw,28px); max-width:780px; margin:0 auto; align-items:end}
+.phones figure{margin:0; transition:transform .6s var(--ease)}
+.phones figure:nth-child(2){transform:translateY(-6%)}
+.phones img{width:100%; height:auto; border-radius:clamp(12px,2vw,26px) clamp(12px,2vw,26px) 0 0; box-shadow:0 30px 60px -20px rgba(16,24,40,.35), 0 0 0 1px rgba(16,24,40,.06)}
+.browser{max-width:980px; margin:0 auto; border-radius:14px 14px 0 0; overflow:hidden; background:var(--stage-2); box-shadow:0 30px 70px -24px rgba(0,0,0,.5), 0 0 0 1px var(--stage-line)}
+.browser .bar{height:34px; display:flex; align-items:center; gap:7px; padding:0 14px; border-bottom:1px solid var(--stage-line)}
+.browser .bar i{width:10px; height:10px; border-radius:50%; background:var(--stage-line)}
+.browser .bar span{margin-left:14px; font-family:var(--mono); font-size:11.5px; color:var(--stage-dim); background:var(--stage); padding:4px 14px; border-radius:6px}
+.browser img{width:100%; height:auto}
+.case-text{display:grid; gap:28px; margin-top:clamp(32px,4vw,48px)}
+@media (min-width:900px){.case-text{grid-template-columns:1fr 1fr; gap:56px}}
+.case-text p{margin:0; color:var(--ink-2); font-size:1.04rem}
+.case-text p strong{color:var(--ink); font-weight:500}
+.features{list-style:none; margin:0; padding:0; border-top:1px solid var(--line)}
+.features li{display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--line); font-size:15.5px}
+.features li::before{content:""; flex:0 0 6px; height:6px; margin-top:10px; border-radius:50%; background:var(--accent)}
 
-.p-links{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none}
-.p-links a{
-  display:inline-block; font-size:13.5px; font-weight:500; padding:6px 12px;
-  border:1px solid var(--rule); border-radius:3px; text-decoration:none;
-  transition:border-color .18s, color .18s
-}
-.p-links a:hover{border-color:var(--brass); color:var(--brass)}
-.lede{font-size:1.2rem; line-height:1.5; color:var(--ink) !important; margin-bottom:14px !important}
+/* ---------------- principles ---------------- */
+.principles{background:var(--bg-2)}
+.pgrid{display:grid; gap:2px; background:var(--line); border:1px solid var(--line); border-radius:20px; overflow:hidden}
+@media (min-width:860px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+.pgrid article{background:var(--bg); padding:clamp(28px,3.5vw,44px)}
+.pgrid .mono{color:var(--ink-3)}
+.pgrid h3{font-family:var(--serif); font-weight:400; font-size:2rem; line-height:1.05; letter-spacing:-.01em; margin:44px 0 14px}
+.pgrid p{margin:0; color:var(--ink-2)}
 
-/* screenshots: phones sit three across; a desktop shot gets a thin browser frame */
-.shots{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:26px 0; max-width:620px}
-.shots img{width:100%; height:auto; display:block; border-radius:12px; background:var(--card)}
-.browser{margin:26px 0; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--card)}
-.browser::before{
-  content:""; display:block; height:22px; border-bottom:1px solid var(--rule);
-  background:radial-gradient(circle at 14px 11px,var(--rule) 4px,transparent 4.5px),
-             radial-gradient(circle at 28px 11px,var(--rule) 4px,transparent 4.5px),
-             radial-gradient(circle at 42px 11px,var(--rule) 4px,transparent 4.5px)
-}
-.browser img{width:100%; height:auto; display:block}
+/* ---------------- about ---------------- */
+.about-grid{display:grid; gap:48px}
+@media (min-width:900px){.about-grid{grid-template-columns:220px 1fr 1fr; gap:40px}}
+.about-grid > div:first-child{display:none}
+@media (min-width:900px){.about-grid > div:first-child{display:block}}
+.about-copy p{margin:0 0 18px; color:var(--ink-2); font-size:1.08rem}
+.about-copy p:first-child{font-family:var(--serif); font-size:clamp(1.6rem,2.6vw,2.1rem); line-height:1.2; color:var(--ink); letter-spacing:-.01em}
+.about-copy strong{color:var(--ink); font-weight:500}
+.tl{list-style:none; margin:0; padding:0; border-top:1px solid var(--line)}
+.tl li{display:grid; grid-template-columns:110px 1fr; gap:16px; padding:16px 0; border-bottom:1px solid var(--line)}
+.tl time{font-family:var(--mono); font-size:12.5px; color:var(--accent); padding-top:2px}
+.tl b{display:block; font-weight:500}
+.tl span{color:var(--ink-3); font-size:14.5px}
+.stack{margin-top:28px}
+.stack .mono{color:var(--ink-3); display:block; margin-bottom:12px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; list-style:none; margin:0; padding:0}
+.chips li{font-size:13.5px; padding:6px 12px; border:1px solid var(--line-2); border-radius:999px; color:var(--ink-2); background:var(--surface)}
 
-/* ---------------------------- how I work ---------------------------- */
-.how{display:grid; gap:30px}
-@media (min-width:800px){.how{grid-template-columns:repeat(3,1fr); gap:44px}}
-.how h3{font-size:1.45rem; margin-bottom:10px}
-.how p{margin:0; color:var(--ink-2)}
-.tools{font-size:14.5px; color:var(--ink-2); margin:0}
-.tools b{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500;
-  letter-spacing:.13em; text-transform:uppercase; color:var(--brass); margin-right:8px}
-
-/* ---------------------------- before ---------------------------- */
-.before{display:grid; gap:30px; max-width:70ch}
-.before p{margin:0; color:var(--ink-2)}
-.before p strong{color:var(--ink); font-weight:600}
-.tl{list-style:none; margin:0; padding:0; display:grid; gap:2px}
-.tl li{display:grid; grid-template-columns:104px 1fr; gap:16px; padding:9px 0; border-top:1px solid var(--rule); font-size:15px}
-.tl li:last-child{border-bottom:1px solid var(--rule)}
-.tl time{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--brass); padding-top:3px}
-.tl span{color:var(--ink-2)}
-.tl b{color:var(--ink); font-weight:600}
-@media (max-width:520px){.tl li{grid-template-columns:1fr; gap:2px}}
-
-/* ---------------------------- contact ---------------------------- */
-.contact h2{font-size:clamp(1.9rem,4.5vw,2.6rem); margin-bottom:16px; max-width:26ch}
-.contact p{color:var(--ink-2); max-width:52ch; margin:0 0 30px}
-.clinks{display:flex; flex-wrap:wrap; gap:10px}
-.clinks a{
-  display:inline-block; padding:11px 19px; border:1px solid var(--rule); border-radius:3px;
-  text-decoration:none; font-size:14.5px; font-weight:500; transition:border-color .18s,color .18s
+/* ---------------- contact ---------------- */
+.contact{background:var(--stage); color:var(--stage-ink); padding:clamp(80px,12vw,170px) 0 0}
+.contact .mono{color:var(--accent-soft)}
+.contact h2{font-family:var(--serif); font-weight:400; font-size:clamp(3rem,8.4vw,7.4rem); line-height:.98; letter-spacing:-.025em; margin:26px 0 0; max-width:14ch}
+.contact h2 em{font-style:italic; color:var(--accent-soft)}
+.contact p{color:var(--stage-dim); max-width:48ch; font-size:1.1rem; margin:28px 0 0}
+.mail{
+  display:inline-flex; align-items:center; gap:16px; margin-top:44px;
+  font-family:var(--serif); font-size:clamp(1.7rem,4.2vw,3.2rem); letter-spacing:-.01em;
+  border-bottom:1px solid var(--stage-line); padding-bottom:10px; transition:border-color .3s, color .3s;
+  overflow-wrap:anywhere;
 }
-.clinks a:hover{border-color:var(--brass); color:var(--brass)}
-.clinks a.primary{background:var(--ink); border-color:var(--ink); color:var(--paper)}
-.clinks a.primary:hover{filter:brightness(1.25); color:var(--paper)}
-footer{
-  font-family:"IBM Plex Mono",monospace; font-size:11.5px;
-  color:var(--ink-2); border-top:1px solid var(--rule); letter-spacing:.04em
+.mail:hover{border-color:var(--accent-soft); color:var(--accent-soft)}
+.mail svg{width:.6em; height:.6em; flex:none; transition:transform .3s var(--ease)}
+.mail:hover svg{transform:translate(4px,-4px)}
+.socials{display:flex; flex-wrap:wrap; gap:10px; margin-top:36px}
+.socials a{padding:11px 18px; border:1px solid var(--stage-line); border-radius:999px; font-size:14.5px; color:var(--stage-ink); transition:border-color .2s}
+.socials a:hover{border-color:var(--stage-dim)}
+footer{margin-top:clamp(80px,10vw,140px); border-top:1px solid var(--stage-line); padding:28px 0 36px; color:var(--stage-dim)}
+footer .wrap{display:flex; flex-wrap:wrap; gap:12px 32px; justify-content:space-between; font-size:13px}
+footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-width:70ch}
+
+/* ---------------- reveal on scroll ---------------- */
+@media (prefers-reduced-motion:no-preference){
+  .js .rv{opacity:0; transform:translateY(22px); transition:opacity .9s var(--ease), transform .9s var(--ease)}
+  .js .rv.in{opacity:1; transform:none}
+  .js .rv.d1{transition-delay:.08s} .js .rv.d2{transition-delay:.16s} .js .rv.d3{transition-delay:.24s}
 }
-footer .page{padding-top:30px; padding-bottom:50px}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
-<header class="hero">
-  <div class="page">
-    <span class="rail" aria-hidden="true"></span>
-    <div class="hero-grid">
-      <div>
-        <h1>Adam&nbsp;Liscia</h1>
-        <p class="role">Software engineer · New York</p>
-        <p class="lead">I build apps and websites that <strong>real people use every
-          day</strong>. Three of them are live right now: a home for Magic: The Gathering
-          players, a TV channel for tabletop gaming, and a cocktail app for bartenders.
-          Before software I taught math for seven years, and I still work in hospitality.</p>
-        <div class="hero-links">
-          <a class="btn primary" href="mailto:adamliscia@gmail.com">Email me</a>
-          <a class="btn" href="https://github.com/AdamLiscia">GitHub</a>
-          <a class="btn" href="https://www.linkedin.com/in/adam-liscia-b73555138/">LinkedIn</a>
-        </div>
-      </div>
-
-      <figure class="plot" style="margin:0">
-        <svg id="chart" viewBox="0 0 620 300" role="img"
-             aria-label="Line chart of people who have joined Nerd Leagues, May 2024 to October 2026, rising from 1 to 724, climbing sharply from January 2026.">
-        </svg>
-        <figcaption class="plot-cap">People who've joined Nerd Leagues · May 2024 – Oct 2026</figcaption>
-      </figure>
-    </div>
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Adam Liscia, home">Adam&nbsp;<i>Liscia</i></a>
+    <ul>
+      <li class="hide-sm"><a href="#work">Work</a></li>
+      <li class="hide-sm"><a href="#about">About</a></li>
+      <li><a class="cta" href="#contact">Get in touch</a></li>
+    </ul>
   </div>
-</header>
+</nav>
 
-<main>
-  <section id="work">
-    <div class="page">
-      <span class="rail" aria-hidden="true"></span>
-      <p class="eyebrow">What I've built</p>
-
-      <article class="project">
-       <div class="p-head">
-        <h3>Nerd Leagues</h3>
-        <p class="pmeta">Co-founder<br>Dec 2023 – present</p>
-        <ul class="p-links">
-          <li><a href="https://nerdleagues.com">nerdleagues.com</a></li>
-          <li><a href="https://apps.apple.com/app/nerd-leagues/id6760728360">App Store</a></li>
-          <li><a href="https://play.google.com/store/apps/details?id=com.nerdleagues.app">Google Play</a></li>
-        </ul>
-       </div>
-       <div class="p-body">
-        <p class="lede">A home base for people who play Magic: The Gathering.</p>
-        <p>Players use it to run their weekly leagues, record their games, see where they
-          rank, and build and share decks. I co-founded it and wrote most of the code, and
-          I built the <strong>phone app entirely on my own</strong> — it's on the App Store
-          and Google Play.</p>
-        <div class="shots">
-          <img src="img/nl-home.jpg" width="600" height="1299" loading="lazy"
-               alt="Nerd Leagues phone app home screen: a Play button, an invite-code field and a list of recent games.">
-          <img src="img/nl-life.jpg" width="600" height="1299" loading="lazy"
-               alt="Nerd Leagues life tracker: four players' life totals on one screen, each player using their own phone.">
-          <img src="img/nl-deck.jpg" width="600" height="1299" loading="lazy"
-               alt="A deck page in the Nerd Leagues phone app.">
+<main id="main">
+  <header class="hero" id="top">
+    <div class="wrap">
+      <span class="status rv"><span class="dot" aria-hidden="true"></span>Open to software engineering roles</span>
+      <h1 class="rv d1">I build products people <em>actually use.</em></h1>
+      <div class="hero-foot">
+        <div class="rv d2">
+          <p>I'm <strong>Adam Liscia</strong>, a software engineer in New York. I design, build
+            and ship complete products, from the database to the app in your pocket. Three of
+            them are live right now, and two are in the app stores.</p>
+          <div class="btns">
+            <a class="btn solid" href="#work">See the work
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+            <a class="btn" href="mailto:adamliscia@gmail.com">Email me</a>
+          </div>
         </div>
-        <div class="stats">
-          <div class="stat"><b>724</b><span>members</span></div>
-          <div class="stat"><b>1,413</b><span>decks built</span></div>
-          <div class="stat"><b>525</b><span>games recorded</span></div>
-          <div class="stat"><b>155</b><span>articles</span></div>
-        </div>
-        <p>One thing I'm proud of: a deck-checking tool used to take <strong>11 seconds</strong>
-          to load. I rebuilt how it gets its data and got it down to a blink, which made it
-          fast enough to open up to everyone instead of just signed-in members.</p>
-       </div>
-      </article>
+        <dl class="kv rv d3">
+          <dt class="mono">Focus</dt><dd>Full-stack web &amp; mobile</dd>
+          <dt class="mono">Based in</dt><dd>New York · open to remote</dd>
+        </dl>
+        <dl class="kv rv d3">
+          <dt class="mono">Background</dt><dd>B.S. Mathematics, Stony Brook</dd>
+          <dt class="mono">Before software</dt><dd>Seven years teaching math</dd>
+        </dl>
+      </div>
+    </div>
+  </header>
 
-      <article class="project">
-       <div class="p-head">
-        <h3>Nerd Leagues TV</h3>
-        <p class="pmeta">Built solo<br>Jul 2026 – present</p>
-        <ul class="p-links">
-          <li><a href="https://nerdleagues.tv">nerdleagues.tv</a></li>
-        </ul>
-       </div>
-       <div class="p-body">
-        <p class="lede">One channel for tabletop gaming videos.</p>
-        <p>Hand-picked YouTube and Twitch creators across six games, all playing in one
-          place. You flip channels like a TV instead of digging through YouTube. I designed,
-          built and launched it <strong>by myself, in 24 days</strong>.</p>
-        <figure class="browser" style="margin-left:0;margin-right:0">
-          <img src="img/tv-guide.jpg" width="1440" height="763" loading="lazy"
-               alt="Nerd Leagues TV in a browser: a large video player on the left and a channel guide on the right listing categories like Actual Play and Character Builds.">
+  <section class="proof" aria-label="Nerd Leagues growth">
+    <div class="wrap">
+      <div class="board rv">
+        <div class="board-copy">
+          <div>
+            <span class="mono">Nerd Leagues · since launch</span>
+            <h3>A product that keeps growing.</h3>
+            <p>Every point on this line is a real person who signed up. Growth picked up in
+              January 2026 and hasn't slowed down since.</p>
+          </div>
+          <div class="big">~800<small>players, Oct 2026</small></div>
+        </div>
+        <figure class="board-plot" id="plot" style="margin:0">
+          <svg id="chart" viewBox="0 0 620 320" role="img"
+               aria-label="Line chart of people who have joined Nerd Leagues, May 2024 to mid-October 2026, rising from 1 to 724, climbing sharply from January 2026.">
+            <defs>
+              <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#E2B26A" stop-opacity=".28"/>
+                <stop offset="1" stop-color="#E2B26A" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <figcaption class="plot-cap mono">Total members by month · May 2024 – 17 Oct 2026</figcaption>
         </figure>
-        <div class="stats">
-          <div class="stat"><b>223</b><span>creators</span></div>
-          <div class="stat"><b>3,466</b><span>videos</span></div>
-          <div class="stat"><b>6</b><span>games</span></div>
-          <div class="stat"><b>24</b><span>days to launch</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" style="padding-top:clamp(24px,4vw,60px)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono rv">Selected work</span>
+        <h2 class="rv d1">Three products, <em>all live, all in use.</em></h2>
+      </div>
+
+      <article class="case">
+        <div class="case-top">
+          <span class="case-num rv">01</span>
+          <div class="rv d1">
+            <h3>Nerd Leagues</h3>
+            <p class="tagline">A website and app with tools for Magic: The Gathering players,
+              used by nearly 800 of them.</p>
+          </div>
         </div>
-        <p>Before it went public I caught a setting that, with one line of setup missing,
-          would have left the site's admin controls open to anyone. I fixed it and tested
-          every case before a single visitor arrived.</p>
-       </div>
+        <div class="case-body">
+          <dl class="meta rv">
+            <div><dt class="mono">Role</dt><dd>Co-Founder &amp; Full-Stack Engineer</dd></div>
+            <div><dt class="mono">Timeline</dt><dd>Dec 2023 – present</dd></div>
+            <div><dt class="mono">Platforms</dt><dd>Web, iOS, Android</dd></div>
+            <div><dt class="mono">Visit</dt><dd><a href="https://nerdleagues.com">nerdleagues.com</a></dd>
+              <dd><a href="https://apps.apple.com/app/nerd-leagues/id6760728360">App Store</a><a href="https://play.google.com/store/apps/details?id=com.nerdleagues.app">Google Play</a></dd></div>
+          </dl>
+          <div>
+            <div class="stage rv d1">
+              <div class="phones">
+                <figure><img src="img/nl-home.jpg" width="600" height="1299" loading="lazy"
+                  alt="Nerd Leagues phone app home screen: a Play button, an invite-code field and a list of recent games."></figure>
+                <figure><img src="img/nl-life.jpg" width="600" height="1299" loading="lazy"
+                  alt="Nerd Leagues life tracker: four players' life totals on one screen, each player using their own phone."></figure>
+                <figure><img src="img/nl-deck.jpg" width="600" height="1299" loading="lazy"
+                  alt="A deck page in the Nerd Leagues phone app."></figure>
+              </div>
+            </div>
+            <div class="case-text">
+              <p class="rv">Built for everyone who plays: casual Commander groups, competitive
+                players, deck builders and the local game stores that host them. I co-founded
+                Nerd Leagues and work across the whole thing, and I built the <strong>iOS and
+                Android app</strong> that's on both app stores.</p>
+              <ul class="features rv d1">
+                <li>Deck builder and a bracket checker for Commander decks</li>
+                <li>Combo Finder</li>
+                <li>Leagues with ELO rankings</li>
+                <li>A life tracker app that works offline</li>
+                <li>News, set spoilers, a blog and a wiki</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </article>
 
-      <article class="project">
-       <div class="p-head">
-        <h3>BarCraft</h3>
-        <p class="pmeta">Built solo<br>Jun 2025 – present</p>
-        <ul class="p-links">
-          <li><a href="https://apps.apple.com/us/app/barcraft-cocktail-recipes/id6783025586">App Store</a></li>
-          <li><a href="https://barcraft.bar">barcraft.bar</a></li>
-        </ul>
-       </div>
-       <div class="p-body">
-        <p class="lede">A cocktail app for working bartenders.</p>
-        <p>Look up a recipe, save your own version, and scale it up for a big batch — fast
-          enough to use in the middle of a shift. It's on the <strong>iPhone App
-          Store</strong>, and I built every part of it myself.</p>
-        <div class="shots">
-          <img src="img/bc-cocktails.jpg" width="600" height="1299" loading="lazy"
-               alt="BarCraft cocktail library on iPhone.">
-          <img src="img/bc-batch.jpg" width="600" height="1299" loading="lazy"
-               alt="BarCraft batch calculator: a recipe scaled up to 20 drinks, with the amount of each ingredient worked out.">
-          <img src="img/bc-edit.jpg" width="600" height="1299" loading="lazy"
-               alt="Editing a cocktail recipe in BarCraft.">
+      <article class="case">
+        <div class="case-top">
+          <span class="case-num rv">02</span>
+          <div class="rv d1">
+            <h3>BarCraft</h3>
+            <p class="tagline">A cocktail app for working bartenders: any recipe in the fewest
+              taps, in the middle of a shift.</p>
+          </div>
         </div>
-        <p>The batch calculator is the math I use at my own bar job, where batching the cocktails
-          is part of the shift. I wrote it down once so nobody has to do it on a napkin again.</p>
-       </div>
+        <div class="case-body">
+          <dl class="meta rv">
+            <div><dt class="mono">Role</dt><dd>Founder &amp; Sole Engineer</dd></div>
+            <div><dt class="mono">Timeline</dt><dd>Jun 2025 – present</dd></div>
+            <div><dt class="mono">Platforms</dt><dd>iOS</dd></div>
+            <div><dt class="mono">Visit</dt><dd><a href="https://barcraft.bar">barcraft.bar</a></dd>
+              <dd><a href="https://apps.apple.com/us/app/barcraft-cocktail-recipes/id6783025586">App Store</a></dd></div>
+          </dl>
+          <div>
+            <div class="stage dark rv d1">
+              <div class="phones">
+                <figure><img src="img/bc-cocktails.jpg" width="600" height="1299" loading="lazy"
+                  alt="BarCraft cocktail library on iPhone."></figure>
+                <figure><img src="img/bc-batch.jpg" width="600" height="1299" loading="lazy"
+                  alt="BarCraft batch calculator: a recipe scaled up to 20 drinks, with the amount of each ingredient worked out."></figure>
+                <figure><img src="img/bc-edit.jpg" width="600" height="1299" loading="lazy"
+                  alt="Editing a cocktail recipe in BarCraft."></figure>
+              </div>
+            </div>
+            <div class="case-text">
+              <p class="rv">BarCraft grew out of my own bar job, where batching cocktails is part
+                of the shift. It's for bartenders, the managers who build drink menus, and anyone
+                mixing at home. It's live on the <strong>iPhone App Store</strong>, and I built
+                every part of it myself.</p>
+              <ul class="features rv d1">
+                <li>Fast recipe lookup</li>
+                <li>Your own recipe library: edit a classic or write your own</li>
+                <li>A batch calculator, including the water melting ice adds</li>
+                <li>An AI mentor that talks a drink through with you</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <span class="case-num rv">03</span>
+          <div class="rv d1">
+            <h3>Nerd Leagues TV</h3>
+            <p class="tagline">One channel for tabletop gaming videos. Flip channels like a TV
+              instead of digging through YouTube.</p>
+          </div>
+        </div>
+        <div class="case-body">
+          <dl class="meta rv">
+            <div><dt class="mono">Role</dt><dd>Solo Engineer</dd></div>
+            <div><dt class="mono">Timeline</dt><dd>Jul 2026 – present</dd></div>
+            <div><dt class="mono">Platforms</dt><dd>Web</dd></div>
+            <div><dt class="mono">Visit</dt><dd><a href="https://nerdleagues.tv">nerdleagues.tv</a></dd></div>
+          </dl>
+          <div>
+            <div class="stage dark rv d1">
+              <div class="browser">
+                <div class="bar"><i></i><i></i><i></i><span>nerdleagues.tv</span></div>
+                <img src="img/tv-guide.jpg" width="1440" height="763" loading="lazy"
+                  alt="Nerd Leagues TV in a browser: a large video player on the left and a channel guide on the right listing categories like Actual Play and Character Builds.">
+              </div>
+            </div>
+            <div class="case-text">
+              <p class="rv">A companion to Nerd Leagues: hand-picked YouTube and Twitch creators
+                playing Magic, Warhammer, D&amp;D, Pokémon, Yu-Gi-Oh! and One Piece, all in one
+                TV-style player. I designed, built and launched it on my own.</p>
+              <ul class="features rv d1">
+                <li>Channel-surfing player with a live guide</li>
+                <li>Six games, hand-picked creators</li>
+                <li>AI sorts every new video into the right channel</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </article>
     </div>
   </section>
 
-  <section id="how">
-    <div class="page">
-      <span class="rail" aria-hidden="true"></span>
-      <p class="eyebrow">How I work</p>
-      <div class="how">
-        <div><h3>I finish things.</h3>
+  <section class="principles" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono rv">How I work</span>
+        <h2 class="rv d1" id="how-h">Simple rules, <em>kept every day.</em></h2>
+      </div>
+      <div class="pgrid">
+        <article class="rv"><span class="mono">01</span><h3>I finish things.</h3>
           <p>All three projects are live and in use, and two of them are in the app stores.
-            Shipping is the part I care about most.</p></div>
-        <div><h3>I explain things.</h3>
+            Shipping is the part I care about most.</p></article>
+        <article class="rv d1"><span class="mono">02</span><h3>I explain things.</h3>
           <p>Seven years of teaching taught me to make hard ideas simple. I write down why I
-            made each decision, so the next person doesn't have to guess.</p></div>
-        <div><h3>I build for a busy night.</h3>
+            made each decision, so the next person doesn't have to guess.</p></article>
+        <article class="rv d2"><span class="mono">03</span><h3>I build for a busy night.</h3>
           <p>Behind a bar you learn that a system nobody can use under pressure isn't
-            finished. I build software the same way.</p></div>
+            finished. I build software the same way.</p></article>
       </div>
     </div>
   </section>
 
-  <section id="before">
-    <div class="page">
-      <span class="rail" aria-hidden="true"></span>
-      <p class="eyebrow">Before this</p>
-      <div class="before">
-        <p>I studied <strong>mathematics at Stony Brook</strong> and spent seven years
-          teaching it — geometry and statistics for New York City public schools, then
-          designing courses for homeschooled students, where I also taught some beginner Python
-          in a STEM elective until Covid closed the school. I've
-          tutored around a hundred students along the way.</p>
-        <p>I've worked in hospitality the whole time, and still do. It's why BarCraft exists.</p>
-        <ul class="tl">
-          <li><time>2009–2013</time><span><b>B.S. Mathematics</b>, Stony Brook University</span></li>
-          <li><time>2015–2017</time><span><b>Math teacher</b>, NYC Department of Education</span></li>
-          <li><time>2018–2019</time><span><b>Data Science program</b>, Flatiron School</span></li>
-          <li><time>2019–2021</time><span><b>Math teacher</b>, School for Young Performers</span></li>
-          <li><time>2023–</time><span><b>Nerd Leagues</b>, then <b>BarCraft</b> and <b>Nerd Leagues TV</b></span></li>
-        </ul>
-        <p class="tools"><b>Tools</b>Python, TypeScript, React, React Native, Flask, FastAPI,
-          MySQL, AWS</p>
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono rv">About</span>
+        <h2 class="rv d1">From the classroom <em>to shipping code.</em></h2>
+      </div>
+      <div class="about-grid">
+        <div></div>
+        <div class="about-copy rv">
+          <p>I studied mathematics, taught it for seven years, and now I build software.</p>
+          <p>I taught geometry and statistics in New York City public schools, then designed
+            courses for homeschooled students, where I also taught beginner Python in a STEM
+            elective. I've tutored around a hundred students along the way.</p>
+          <p>I've worked in hospitality the whole time, and still do. It's why BarCraft exists,
+            and it's where I learned to build things that hold up on a busy night.</p>
+          <div class="stack">
+            <span class="mono">Tools</span>
+            <ul class="chips">
+              <li>Python</li><li>TypeScript</li><li>React</li><li>React Native</li>
+              <li>Flask</li><li>FastAPI</li><li>MySQL</li><li>AWS</li>
+            </ul>
+          </div>
+        </div>
+        <ol class="tl rv d1" aria-label="Timeline">
+          <li><time>2023 –</time><div><b>Nerd Leagues</b><span>then BarCraft and Nerd Leagues TV</span></div></li>
+          <li><time>2019 – 2021</time><div><b>Math teacher</b><span>School for Young Performers</span></div></li>
+          <li><time>2018 – 2019</time><div><b>Data Science program</b><span>Flatiron School</span></div></li>
+          <li><time>2015 – 2017</time><div><b>Math teacher</b><span>NYC Department of Education</span></div></li>
+          <li><time>2009 – 2013</time><div><b>B.S. Mathematics</b><span>Stony Brook University</span></div></li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <section id="contact" class="contact">
-    <div class="page">
-      <span class="rail" aria-hidden="true"></span>
-      <p class="eyebrow">Get in touch</p>
-      <h2>I'm looking for a software engineering job, remote or around New York.</h2>
-      <p>Frontend, backend, or the whole thing. Email is the fastest way to reach me.</p>
-      <div class="clinks">
-        <a class="primary" href="mailto:adamliscia@gmail.com">adamliscia@gmail.com</a>
-        <a href="https://github.com/AdamLiscia">github.com/AdamLiscia</a>
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="mono rv">Get in touch</span>
+      <h2 class="rv d1">Let's build something <em>people use.</em></h2>
+      <p class="rv d2">I'm looking for a software engineering role, remote or around New York.
+        Frontend, backend, or the whole thing. Email is the fastest way to reach me.</p>
+      <a class="mail rv d2" href="mailto:adamliscia@gmail.com">adamliscia@gmail.com
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"/></svg></a>
+      <div class="socials rv d3">
+        <a href="https://github.com/AdamLiscia">GitHub</a>
         <a href="https://www.linkedin.com/in/adam-liscia-b73555138/">LinkedIn</a>
+        <a href="https://nerdleagues.com">Nerd Leagues</a>
       </div>
     </div>
+    <footer>
+      <div class="wrap">
+        <span>© <span id="yr">2026</span> Adam Liscia · New York</span>
+        <span class="note">"Nearly 800 players": Nerd Leagues, 28 Oct 2026. Chart: monthly signups pulled 17 Oct 2026.</span>
+      </div>
+    </footer>
   </section>
-
-  <footer>
-    <div class="page">
-      <span class="rail" aria-hidden="true"></span>
-      Adam Liscia · New York · Nerd Leagues figures October 2026 · Nerd Leagues TV figures at launch, August 2026
-    </div>
-  </footer>
 </main>
 
 <script>
 // Real cumulative signups, pulled from the Nerd Leagues database 2026-10-17.
 // Counts users with a non-NULL created_at, which is why the endpoint is 724 and not the
-// 726 that COUNT(*) returns — two rows have no signup timestamp. The stat card above
-// says 724 so the number and the curve agree; see career/metrics.md "Note on 488/489/490".
+// 726 that COUNT(*) returns. The "nearly 800" headline is the 2026-10-28 total (778,
+// career/metrics.md); the two are dated separately in the caption and footer.
+// Re-pull the whole series (see README) and this note can go.
 const SERIES = [["2024-05",1],["2024-06",2],["2024-07",5],["2024-08",7],["2024-10",8],
 ["2025-01",9],["2025-02",12],["2025-03",13],["2025-04",19],["2025-05",26],["2025-06",30],
 ["2025-07",42],["2025-08",53],["2025-09",62],["2025-10",81],["2025-11",90],["2025-12",97],
@@ -408,7 +551,7 @@ const SERIES = [["2024-05",1],["2024-06",2],["2024-07",5],["2024-08",7],["2024-1
 (function drawChart(){
   const svg = document.getElementById('chart');
   if (!svg) return;
-  const W = 620, H = 300, L = 42, R = 46, T = 22, B = 34;
+  const W = 620, H = 320, L = 40, R = 58, T = 24, B = 34;
   const iw = W - L - R, ih = H - T - B;
   const yMax = 800;
   const x = i => L + (i / (SERIES.length - 1)) * iw;
@@ -417,35 +560,48 @@ const SERIES = [["2024-05",1],["2024-06",2],["2024-07",5],["2024-08",7],["2024-1
   const el = (n, a) => { const e = document.createElementNS(NS, n);
     for (const k in a) e.setAttribute(k, a[k]); return e; };
 
-  // horizontal gridlines + y labels
-  [0, 400, 800].forEach(v => {
+  [0, 200, 400, 600, 800].forEach(v => {
     svg.appendChild(el('line', {class:'grid-line', x1:L, x2:L+iw, y1:y(v), y2:y(v)}));
     const t = el('text', {class:'axis-txt', x:L-10, y:y(v)+3.5, 'text-anchor':'end'});
     t.textContent = v; svg.appendChild(t);
   });
-
-  // x labels at year boundaries
   [['2024-05','2024'],['2025-01','2025'],['2026-01','2026']].forEach(([key,label]) => {
     const i = SERIES.findIndex(d => d[0] === key);
     if (i < 0) return;
-    const t = el('text', {class:'axis-txt', x:x(i), y:H-B+20, 'text-anchor':'middle'});
+    const t = el('text', {class:'axis-txt', x:x(i), y:H-B+22, 'text-anchor':'middle'});
     t.textContent = label; svg.appendChild(t);
   });
 
-  const d = SERIES.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p[1]).toFixed(1)}`).join(' ');
+  const pts = SERIES.map((p, i) => [x(i), y(p[1])]);
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  svg.appendChild(el('path', {class:'area', d: d + ` L${x(SERIES.length-1).toFixed(1)},${y(0)} L${x(0)},${y(0)} Z`}));
   const path = el('path', {class:'curve', d});
   svg.appendChild(path);
-
-  try {
-    const len = path.getTotalLength();
-    if (len) path.style.setProperty('--len', len.toFixed(1));
-  } catch (e) { /* getTotalLength unsupported — line just renders undrawn */ }
+  try { const len = path.getTotalLength(); if (len) path.style.setProperty('--len', len.toFixed(1)); } catch (e) {}
 
   const last = SERIES.length - 1, lv = SERIES[last][1];
-  const dot = el('circle', {class:'endcap fade', cx:x(last), cy:y(lv), r:4.5});
-  const lab = el('text', {class:'endlabel fade', x:x(last)+11, y:y(lv)+5.5});
-  lab.textContent = lv;
-  svg.appendChild(dot); svg.appendChild(lab);
+  svg.appendChild(el('circle', {class:'endring fade', cx:x(last), cy:y(lv), r:10}));
+  svg.appendChild(el('circle', {class:'endcap fade', cx:x(last), cy:y(lv), r:4.5}));
+  const lab = el('text', {class:'endlabel fade', x:x(last)+16, y:y(lv)+5});
+  lab.textContent = lv; svg.appendChild(lab);
+})();
+
+(function motion(){
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  const plot = document.getElementById('plot');
+  const items = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach(e => e.classList.add('in')); plot.classList.add('drawn'); return;
+  }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add(e.target === plot ? 'drawn' : 'in'); io.unobserve(e.target);
+  }), {rootMargin:'0px 0px -8% 0px', threshold:.12});
+  items.forEach(e => io.observe(e)); io.observe(plot);
 })();
 </script>
 </body>
