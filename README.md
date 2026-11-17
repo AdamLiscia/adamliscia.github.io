@@ -19,8 +19,8 @@ Redesigned 2026-11-04 when Adam asked for it to look "as if I paid someone $15,0
 - **Type**: Instrument Serif for display (italic carries the accent), Geist for body and
   Geist Mono for labels.
 - **Structure**: sticky blurred nav → big serif hero → the growth chart as a dark "board" →
-  three numbered case studies (**Nerd Leagues → BarCraft → Nerd Leagues TV**, the ranking in
-  `background.md`) → How I work → About + timeline → dark contact block.
+  four numbered case studies (**Nerd Leagues → Bolt the Bird → BarCraft → Nerd Leagues TV**;
+  Bolt added second on 2026-11-17 at Adam's request, "right under Nerd Leagues") → How I work → About + timeline → dark contact block.
 - **Copy follows the description spec**: Nerd Leagues carries one number, "nearly 800
   players". BarCraft and TV carry none. No latency or security trivia. The text is cut from
   `resume/master.md`.

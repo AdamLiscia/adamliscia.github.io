@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Adam Liscia — Software Engineer</title>
-<meta name="description" content="Adam Liscia is a software engineer in New York. He builds products people use every day: Nerd Leagues, used by nearly 800 Magic: The Gathering players; BarCraft, a cocktail app on the App Store; and Nerd Leagues TV.">
+<meta name="description" content="Adam Liscia is a software engineer in New York. He builds products people use every day: Nerd Leagues, used by nearly 800 Magic: The Gathering players; BarCraft, a cocktail app on the App Store; Nerd Leagues TV; and Bolt the Bird, an AI that drafts Magic.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://adamliscia.com/">
 <meta property="og:type" content="website">
@@ -327,7 +327,7 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
     <div class="wrap">
       <div class="sec-head">
         <span class="mono rv">Selected work</span>
-        <h2 class="rv d1">Three products, <em>all live, all in use.</em></h2>
+        <h2 class="rv d1">Products people use, <em>and an AI that learned to draft.</em></h2>
       </div>
 
       <article class="case">
@@ -379,6 +379,47 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
         <div class="case-top">
           <span class="case-num rv">02</span>
           <div class="rv d1">
+            <h3>Bolt the Bird</h3>
+            <p class="tagline">An AI that drafts Magic: The Gathering, and learned to build
+              winning decks from real games.</p>
+          </div>
+        </div>
+        <div class="case-body">
+          <dl class="meta rv">
+            <div><dt class="mono">Role</dt><dd>Solo ML Engineer</dd></div>
+            <div><dt class="mono">Timeline</dt><dd>Nov 2026 – present</dd></div>
+            <div><dt class="mono">Built with</dt><dd>Python, PyTorch</dd></div>
+            <div><dt class="mono">Code</dt><dd><a href="https://github.com/AdamLiscia/bolt-the-bird">GitHub</a></dd></div>
+          </dl>
+          <div>
+            <div class="stage rv d1" style="padding-bottom:clamp(28px,5vw,64px)">
+              <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="img/bolt-tournament-dark.png">
+                <img src="img/bolt-tournament-light.png" width="1600" height="680" loading="lazy" style="display:block;width:100%;height:auto;border-radius:10px"
+                  alt="A tournament between five versions of the drafting AI: the two trained with PPO on real game results win about 58% of their games against the others, the version trained on a scoring model's predictions about 41%, no better than copying people.">
+              </picture>
+            </div>
+            <div class="case-text">
+              <p class="rv">It learned to draft from 5.5 million real picks, then taught itself
+                to build winning decks. A scoring model I built predicted they'd win 3.9 points
+                more often. To check, I built a Magic game engine that plays every card in the
+                set, and the prediction was wrong. Retrained on real game results, <strong>its
+                decks now win 62% of games where human-style decks win 50%.</strong></p>
+              <ul class="features rv d1">
+                <li>Learned from 5.5 million real picks</li>
+                <li>A Magic game engine that plays every card in the set</li>
+                <li>Reinforcement learning on real game results</li>
+                <li>Every version tested head to head, over 100,000 games</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-top">
+          <span class="case-num rv">03</span>
+          <div class="rv d1">
             <h3>BarCraft</h3>
             <p class="tagline">A cocktail app for working bartenders: any recipe in the fewest
               taps, in the middle of a shift.</p>
@@ -421,7 +462,7 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
 
       <article class="case">
         <div class="case-top">
-          <span class="case-num rv">03</span>
+          <span class="case-num rv">04</span>
           <div class="rv d1">
             <h3>Nerd Leagues TV</h3>
             <p class="tagline">One channel for tabletop gaming videos. Flip channels like a TV
@@ -467,7 +508,7 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
       </div>
       <div class="pgrid">
         <article class="rv"><span class="mono">01</span><h3>I finish things.</h3>
-          <p>All three projects are live and in use, and two of them are in the app stores.
+          <p>All three products are live and in use, and two of them are in the app stores.
             Shipping is the part I care about most.</p></article>
         <article class="rv d1"><span class="mono">02</span><h3>I explain things.</h3>
           <p>Seven years of teaching taught me to make hard ideas simple. I write down why I
