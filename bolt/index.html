@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en" data-level="easy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolt the Bird — Adam Liscia</title>
+<meta name="description" content="The full story of Bolt the Bird: an AI that drafts Magic: The Gathering cards, a rules engine in Rust that plays them, a game-playing AI trained by self-play, and online play on Nerd Leagues. Readable at three levels.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://adamliscia.com/bolt/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bolt the Bird — the whole story">
+<meta property="og:description" content="An AI that drafts Magic, a rules engine that plays it, and a player that taught itself. Easy, Hobbyist or Technical.">
+<meta property="og:url" content="https://adamliscia.com/bolt/">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101828'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' font-style='italic' fill='%23E2B26A' text-anchor='middle'>B</text></svg>">
+<script>
+// Reading level: URL (?level=) > saved choice > Easy. Set before paint so the page never flashes.
+(function(){
+  var ok={easy:1,hobby:1,tech:1}, l=null;
+  try{ l=new URLSearchParams(location.search).get('level'); }catch(e){}
+  if(!ok[l]){ try{ l=localStorage.getItem('bolt-level'); }catch(e){} }
+  if(ok[l]) document.documentElement.setAttribute('data-level', l);
+  document.documentElement.classList.add('js');
+})();
+</script>
+<style>
+:root{
+  --bg:#F5F4F0; --bg-2:#ECEAE3; --surface:#FFFFFF; --ink:#101828; --ink-2:#475467;
+  --ink-3:#6B7385; --line:#DEDBD2; --line-2:#CBC7BC; --accent:#A0692A;
+  --accent-soft:#E2B26A; --stage:#101828; --stage-2:#18223A; --stage-ink:#EEF1F6;
+  --stage-dim:#98A2B3; --stage-line:#273352; --ok:#2F9E6B; --warn:#B7791F; --next:#5B6B8C;
+  --bar:#A0692A; --bar-2:#CBC7BC;
+  --wrap:1120px; --read:68ch; --gutter:clamp(16px,4.5vw,56px);
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0B0F19; --bg-2:#111726; --surface:#131A2A; --ink:#EEF1F6; --ink-2:#A9B2C3;
+    --ink-3:#8A94A8; --line:#1F2738; --line-2:#2B3549; --accent:#E2B26A; --accent-soft:#E2B26A;
+    --stage:#121929; --stage-2:#182136; --stage-line:#26314A; --ok:#4CC38A; --warn:#E0A645; --next:#8EA0C4;
+    --bar:#E2B26A; --bar-2:#2B3549;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:132px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
+img{max-width:100%; display:block}
+a{color:inherit}
+p a, li a, dd a, td a{color:var(--accent); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
+::selection{background:var(--accent-soft); color:#101828}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter)}
+.mono{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+.skip{position:absolute; left:-9999px} .skip:focus{left:16px; top:16px; z-index:99; background:var(--surface); padding:8px 12px; border-radius:6px}
+code{font-family:var(--mono); font-size:.88em; background:var(--bg-2); padding:1px 5px; border-radius:4px}
+
+/* ---- reading levels: an element is shown at the levels in its data-l ---- */
+html[data-level="easy"]  [data-l]:not([data-l~="easy"]),
+html[data-level="hobby"] [data-l]:not([data-l~="hobby"]),
+html[data-level="tech"]  [data-l]:not([data-l~="tech"]){display:none}
+
+/* ---- nav + level switch (sticky together) ---- */
+.top{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter:saturate(1.4) blur(14px); -webkit-backdrop-filter:saturate(1.4) blur(14px); border-bottom:1px solid var(--line)}
+.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:64px; flex-wrap:wrap; padding-top:8px; padding-bottom:8px}
+.brand{font-family:var(--serif); font-size:22px; letter-spacing:-.01em; line-height:1; text-decoration:none; white-space:nowrap}
+.brand i{color:var(--accent)}
+.levels{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.levels .mono{color:var(--ink-3)}
+.seg{display:inline-flex; background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:3px}
+.seg button{font:500 14px var(--sans); color:var(--ink-2); background:transparent; border:0; padding:7px 14px; border-radius:999px; cursor:pointer; min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--bg)}
+.nojs-note{font-size:13px; color:var(--ink-3)}
+html.js .nojs-note{display:none}
+html:not(.js) .seg{display:none}
+
+/* ---- hero ---- */
+.hero{padding:clamp(48px,8vw,110px) 0 clamp(36px,5vw,64px)}
+.crumb{font-size:14px; color:var(--ink-3)} .crumb a{color:var(--ink-2); text-decoration:none} .crumb a:hover{color:var(--ink)}
+.hero h1{font-family:var(--serif); font-weight:400; font-size:clamp(3rem,9vw,6.6rem); line-height:.98; letter-spacing:-.025em; margin:22px 0 0}
+.hero h1 em{font-style:italic; color:var(--accent)}
+.lede{font-size:clamp(1.1rem,2vw,1.3rem); color:var(--ink-2); max-width:var(--read); margin:26px 0 0}
+.lede strong{color:var(--ink); font-weight:500}
+.meta-row{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:26px; font-size:14px; color:var(--ink-3)}
+.meta-row a{color:var(--ink-2)}
+
+/* ---- status board ---- */
+.board{background:var(--stage); color:var(--stage-ink); border-radius:22px; padding:clamp(20px,3.5vw,36px); display:grid; gap:22px}
+.board h2{font-family:var(--serif); font-weight:400; font-size:clamp(1.7rem,3.4vw,2.4rem); margin:0; line-height:1.1}
+.board .mono{color:var(--stage-dim)}
+.statuses{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px}
+.st{background:var(--stage-2); border:1px solid var(--stage-line); border-radius:14px; padding:16px; display:grid; gap:6px; align-content:start}
+.st b{font-weight:500; font-size:15.5px}
+.st span{font-size:14px; color:var(--stage-dim); line-height:1.5}
+.pill{display:inline-flex; align-items:center; gap:7px; font:500 11.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase}
+.pill::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.pill.done{color:#4CC38A} .pill.test{color:#E0A645} .pill.next{color:#9FB2D8}
+.nums{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px 22px; border-top:1px solid var(--stage-line); padding-top:22px}
+.nums div{display:grid; gap:4px}
+.nums b{font:500 clamp(1.6rem,3vw,2.1rem)/1.05 var(--mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.nums span{font-size:13.5px; color:var(--stage-dim); line-height:1.45}
+
+/* ---- contents ---- */
+.toc{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:4px 28px; margin:0; padding:0; list-style:none; counter-reset:t}
+.toc li{counter-increment:t; border-top:1px solid var(--line)}
+.toc a{display:flex; gap:12px; padding:11px 0; text-decoration:none; color:var(--ink-2); font-size:15.5px}
+.toc a::before{content:counter(t,decimal-leading-zero); font:500 12px/1.9 var(--mono); color:var(--accent)}
+.toc a:hover{color:var(--ink)}
+
+/* ---- chapters ---- */
+.sec{padding:clamp(44px,7vw,88px) 0; border-top:1px solid var(--line)}
+.sec-grid{display:grid; gap:18px}
+@media (min-width:960px){.sec-grid{grid-template-columns:200px minmax(0,1fr); gap:48px}}
+.sec-side{display:grid; gap:10px; align-content:start}
+.sec-side .mono{color:var(--accent)}
+.sec-side .pill{color:var(--ok)} .sec-side .pill.test{color:var(--warn)} .sec-side .pill.next{color:var(--next)}
+@media (min-width:960px){.sec-side{position:sticky; top:150px}}
+.sec h2{font-family:var(--serif); font-weight:400; font-size:clamp(2rem,4.2vw,3.1rem); line-height:1.04; letter-spacing:-.02em; margin:0 0 18px; max-width:20ch}
+.sec h2 em{font-style:italic; color:var(--ink-3)}
+.body{max-width:var(--read); display:grid; gap:16px; min-width:0}
+.body p{margin:0}
+.body h3{font-size:1.08rem; font-weight:600; margin:10px 0 -4px}
+.body ul, .body ol{margin:0; padding-left:1.2em; display:grid; gap:6px}
+.take{border-left:3px solid var(--accent); background:var(--surface); padding:14px 18px; border-radius:0 12px 12px 0; font-size:1rem}
+.take b{font-weight:600}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:clamp(16px,2.6vw,24px); display:grid; gap:14px; min-width:0}
+.card h3{margin:0; font-size:1rem}
+.note{font-size:14px; color:var(--ink-3); line-height:1.55}
+.term{font-family:var(--mono); font-size:.86em; color:var(--ink-2)}
+
+/* bars (HTML, no chart library) */
+.bars{display:grid; gap:10px}
+.bar{display:grid; grid-template-columns:minmax(0,190px) minmax(0,1fr) 62px; gap:12px; align-items:center}
+.bar .l{font-size:14.5px; font-weight:500}
+.bar .t{height:14px; background:var(--bg-2); border-radius:0 4px 4px 0; position:relative; overflow:hidden}
+.bar .t i{position:absolute; inset:0 auto 0 0; background:var(--bar); border-radius:0 4px 4px 0}
+.bar .t i.dim{background:var(--bar-2)}
+.bar .v{font:500 14px var(--mono); text-align:right; font-variant-numeric:tabular-nums}
+@media (max-width:560px){.bar{grid-template-columns:minmax(0,1fr) 62px} .bar .t{grid-column:1 / -1; grid-row:2}}
+
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-weight:600; color:var(--ink-2); font-size:13.5px}
+td.n, th.n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch}
+
+/* cast of players */
+.cast{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.who{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; display:grid; gap:6px; align-content:start}
+.who .lvl{font:500 11.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.who b{font-size:1.05rem; font-weight:600}
+.who p{margin:0; font-size:14.5px; color:var(--ink-2)}
+.who.learned{border-color:var(--accent)}
+
+figure{margin:0}
+figcaption{font-size:14px; color:var(--ink-3); margin-top:10px}
+
+/* FAQ */
+.faq{display:grid; gap:10px; max-width:var(--read)}
+details{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:0 18px}
+summary{cursor:pointer; list-style:none; padding:16px 28px 16px 0; font-weight:600; font-size:1.02rem; position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+"; position:absolute; right:0; top:13px; font:400 22px/1 var(--mono); color:var(--ink-3)}
+details[open] summary::after{content:"−"}
+details > div{padding:0 0 18px; display:grid; gap:12px; color:var(--ink-2)}
+details > div p{margin:0}
+
+/* foot */
+.foot{padding:clamp(48px,7vw,90px) 0; border-top:1px solid var(--line)}
+.foot .row{display:flex; flex-wrap:wrap; gap:12px}
+.btn{display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; font-size:15px; font-weight:500;
+  border:1px solid var(--line-2); background:var(--surface); text-decoration:none; transition:transform .25s var(--ease), border-color .2s}
+.btn:hover{transform:translateY(-1px); border-color:var(--ink-3)}
+.btn.solid{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+footer{padding:22px 0 40px; font-size:13.5px; color:var(--ink-3)}
+footer .wrap{display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:space-between}
+@media (max-width:560px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))} .levels .mono{display:none} .top .wrap{min-height:56px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Adam Liscia, home">Adam&nbsp;<i>Liscia</i></a>
+    <div class="levels" role="group" aria-label="Reading level">
+      <span class="mono">Reading level</span>
+      <div class="seg">
+        <button type="button" data-set="easy" aria-pressed="true">Easy</button>
+        <button type="button" data-set="hobby" aria-pressed="false">Hobbyist</button>
+        <button type="button" data-set="tech" aria-pressed="false">Technical</button>
+      </div>
+      <span class="nojs-note">Showing the Easy version. Turn on JavaScript to switch levels.</span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+  <!-- ================= hero ================= -->
+  <section class="hero" id="top">
+    <div class="crumb"><a href="/">adamliscia.com</a> / <a href="/#work">Work</a> / Bolt the Bird</div>
+    <h1>Bolt <em>the</em> Bird</h1>
+    <p class="lede" data-l="easy">An AI that plays the card game <strong>Magic: The Gathering</strong>. It learned to pick cards by studying millions of real players, then taught itself to build decks that win. I also built the game itself as software so it could play, then a second AI that learned to play by practicing against itself. Now it's being tested online, on Nerd Leagues.</p>
+    <p class="lede" data-l="hobby">An AI for <strong>Magic: The Gathering draft</strong>. It learned to draft from 5.5 million real picks on MTG Arena, then learned to draft decks that actually win. To prove that, I wrote a rules engine that plays every card in Foundations, trained a player that beats every bot I'd built by hand, and put it online: drafts and games against it are now in testing on Nerd Leagues.</p>
+    <p class="lede" data-l="tech">A drafting agent for MTG Limited (Foundations, Premier Draft): a set transformer trained on 5.5M human picks, fine-tuned with policy-gradient RL (REINFORCE, then PPO) against played outcomes from a <strong>Rust rules engine</strong> I wrote (all 286 cards, PyO3 bindings), plus a separate <strong>0.9M-parameter play policy</strong> trained by self-play PPO with GAE, and a FastAPI service that hosts drafts and games.</p>
+    <p class="lede" data-l="easy hobby tech" style="font-size:1rem">Switch the <b>reading level</b> at the top at any time. Every section rewrites itself, from no jargon at all to the real terms and numbers.</p>
+    <div class="meta-row">
+      <span>Solo project · Nov 2026 – present</span>
+      <span>Python · PyTorch · Rust · FastAPI</span>
+      <a href="https://github.com/AdamLiscia/bolt-the-bird">Code on GitHub</a>
+      <span>Updated 24 Nov 2026</span>
+    </div>
+  </section>
+
+  <!-- ================= status ================= -->
+  <section class="board" aria-labelledby="status-h">
+    <span class="mono">Where it stands</span>
+    <h2 id="status-h">The current status</h2>
+    <div class="statuses">
+      <div class="st"><span class="pill done">Done</span><b>The drafter</b><span>Picks cards and builds a 40-card deck. Its decks win 62% where human-style decks win 50%.</span></div>
+      <div class="st"><span class="pill done">Done</span><b>The rules engine</b><span>Every card in the Foundations set, written in Rust, each one tested.</span></div>
+      <div class="st"><span class="pill done">Done</span><b>The learned player</b><span>Taught itself to play. Beats the strongest hand-built player 58% of the time.</span></div>
+      <div class="st"><span class="pill test">In testing</span><b>Playing online</b><span>Drafts and games on Nerd Leagues, open to its admins for now.</span></div>
+      <div class="st"><span class="pill next">Next</span><b>A second set</b><span>Tarkir: Dragonstorm. Its draft data is in, and the engine can hold more than one set.</span></div>
+    </div>
+    <div class="nums">
+      <div><b>5.5M</b><span>real picks it learned from</span></div>
+      <div><b>70.5%</b><span>picks the same card a person did</span></div>
+      <div><b>62%</b><span>win rate of its decks, where human-style decks win 50%</span></div>
+      <div><b>286</b><span>cards the engine plays, every one with a test</span></div>
+      <div><b>~790,000</b><span>practice games the player taught itself with</span></div>
+      <div><b>58%</b><span>the player's wins against the best hand-built player</span></div>
+    </div>
+  </section>
+
+  <!-- ================= contents ================= -->
+  <section class="sec" aria-labelledby="toc-h" style="border-top:0">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">Contents</span></div>
+      <div>
+        <h2 id="toc-h" class="sr" style="position:absolute;left:-9999px">Contents</h2>
+        <ol class="toc">
+          <li><a href="#cast">Meet the players</a></li>
+          <li><a href="#imitate">Learning from people</a></li>
+          <li><a href="#judge">A scoring model, and its prediction</a></li>
+          <li><a href="#engine">Building the game</a></li>
+          <li><a href="#wrong">The prediction was wrong</a></li>
+          <li><a href="#real">Learning from real games</a></li>
+          <li><a href="#tournament">The tournament</a></li>
+          <li><a href="#player">Teaching it to play</a></li>
+          <li><a href="#regrade">Checking everything again</a></li>
+          <li><a href="#online">Playing it online</a></li>
+          <li><a href="#limits">What it can't do yet</a></li>
+          <li><a href="#next">What's next</a></li>
+          <li><a href="#faq">Questions people ask</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 1 cast ================= -->
+  <section class="sec" id="cast" aria-labelledby="cast-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">01 · Start here</span></div>
+      <div>
+        <h2 id="cast-h">Meet the players</h2>
+        <div class="body">
+          <p data-l="easy">Bolt the Bird is really <b>two different AIs</b>, plus a few simpler players I built by hand. Keeping them straight makes everything else easy.</p>
+          <p data-l="hobby">There are <b>two learned models</b>: the <b>drafter</b>, which picks cards and builds the deck, and the <b>player</b>, which plays the games. Games also need someone at the controls, so the engine has three hand-built players too. On Nerd Leagues these are the four difficulty levels.</p>
+          <p data-l="tech">Two learned policies: the <b>drafter</b> (pick and deck-build) and the <b>play policy</b>. Everything about the drafter is measured by playing its decks in the engine, so the <b>pilot</b> (who plays both sides) matters. Three hand-built pilots plus the learned one; on Nerd Leagues they map to the difficulty levels.</p>
+          <div class="cast">
+            <div class="who"><span class="lvl">AI #1</span><b>The drafter</b>
+              <p data-l="easy hobby">Picks one card at a time from each pack, then builds a 40-card deck. It never plays a game.</p>
+              <p data-l="tech">Set transformer over pool and pack (pick policy) plus a greedy deck builder; trained by imitation, then RL.</p></div>
+            <div class="who learned"><span class="lvl">AI #2 · Expert</span><b>The learned player</b>
+              <p data-l="easy hobby">A neural network that plays the games. It taught itself by playing about 790,000 games, mostly against itself.</p>
+              <p data-l="tech">PlayNet: transformer over visible objects and legal-action tokens with pointers, 0.9M params, self-play PPO + GAE. Greedy at inference.</p></div>
+            <div class="who"><span class="lvl">Hand-built · Easy</span><b>Rules-based</b>
+              <p data-l="easy hobby">Plays by fixed habits: play a land, cast the biggest thing it can, attack when it looks safe, block to survive. It never thinks ahead.</p>
+              <p data-l="tech">Heuristic policy: land, highest-value castable spell, attack/block by simple safety rules. No lookahead.</p></div>
+            <div class="who"><span class="lvl">Hand-built · Medium</span><b>Smart 1 × 2</b>
+              <p data-l="easy hobby">Before each move, it takes its <b>2</b> best-looking options and plays each one out to the end of the game <b>once</b> in its head, then picks the winner.</p>
+              <p data-l="tech">Determinized Monte Carlo rollouts: 2 candidate moves, 1 rollout each to the end of the game, with the cards it can't see replaced by a guess.</p></div>
+            <div class="who"><span class="lvl">Hand-built · Hard</span><b>Smart 4 × 6</b>
+              <p data-l="easy hobby">The same idea, more thorough: its <b>6</b> best options, each played out <b>4</b> times. That's 24 imagined games per decision. The strongest player I built by hand.</p>
+              <p data-l="tech">Top 6 candidates × 4 determinized rollouts each (24 per decision). Beats rules-based 70.9% on the evaluation decks. Never peeks at hidden information.</p></div>
+          </div>
+          <p class="take" data-l="easy hobby tech"><b>The short version:</b> I built players by hand, then trained a neural network that beat the best of them by playing against itself, the same idea as AlphaGo, at a small scale, on a laptop.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2 imitate ================= -->
+  <section class="sec" id="imitate" aria-labelledby="imitate-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">02 · The drafter</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="imitate-h">Learning from <em>people</em></h2>
+        <div class="body">
+          <p data-l="easy">In a Magic draft, eight players sit around a table. Each opens a pack, takes one card, and passes the rest along. Forty-two picks later, everyone builds a deck from what they took. Picking well means knowing which cards are strong, which colors you're in, and which cards go together.</p>
+          <p data-l="easy">A free app called 17lands records drafts that players do on MTG Arena, Magic's online version, and shares them publicly. Bolt studied <b>5.5 million real picks</b> like flashcards: here's what the player had, here's the pack, which card did they take? Each wrong guess nudged it a tiny bit closer. Millions of nudges later, it drafts like a person.</p>
+          <p data-l="hobby">The data is 17lands' public Premier Draft dataset for Foundations: every pick from about 131,000 real drafts. For each pick the model sees your pool so far and the current pack, and learns to predict what the human took. Seeing your pool is the important part: by mid-pack, the best card in the wrong color is usually the wrong pick, and the model learned that without being told.</p>
+          <p data-l="tech">Supervised imitation on 17lands' public FDN Premier Draft data (CC BY 4.0): 5,530,605 picks. The pick model is a transformer over the pool and pack tokens (learned card embeddings, attention across pool and pack), trained with cross-entropy on the human's pick. Data is split by whole draft (85/5/10) so no draft leaks across splits; per-pick splits would leak the player's pool.</p>
+          <div class="card">
+            <h3>Matches the human's pick, on drafts it never saw</h3>
+            <div class="bars">
+              <div class="bar"><span class="l">Bolt (transformer)</span><span class="t"><i style="width:70.5%"></i></span><span class="v">70.5%</span></div>
+              <div class="bar"><span class="l">Take the most popular card</span><span class="t"><i class="dim" style="width:46.9%"></i></span><span class="v">46.9%</span></div>
+            </div>
+            <p class="note" data-l="easy hobby">Why not 100%? Good players disagree with each other. Hand the same pack to two strong drafters and they'll often take different cards, and both can be right.</p>
+            <p class="note" data-l="tech">Top-1 agreement on the held-out test drafts. The pick-order baseline ignores the pool entirely. 100% isn't achievable (human disagreement, misclicks), so the useful comparison is the margin over pool-blind baselines.</p>
+          </div>
+          <p data-l="easy hobby tech">Copying people has a catch, though: you copy their habits too. People often take a valuable rare card that doesn't fit their deck, because on Arena you keep the cards you draft. Off-color rares get taken about three times as often as off-color commons (11.2% vs 3.5% after pack 1), and drafts with two or more of those picks win fewer games (2.70 match wins vs 2.94). To draft <em>better</em> than people, Bolt needed a different goal: build decks that win.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3 judge ================= -->
+  <section class="sec" id="judge" aria-labelledby="judge-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">03 · The drafter</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="judge-h">A scoring model, <em>and its prediction</em></h2>
+        <div class="body">
+          <p data-l="easy">To reward decks that win, you need a way to tell how good a deck is. So I built a second AI, a <b>scoring model</b> (I call it the judge). It studied 674,000 real games: each one a 40-card deck and whether it won. Show it a new deck and it predicts how often that deck wins.</p>
+          <p data-l="easy">Then the drafter practiced: draft a deck, let the judge score it, and lean toward the picks that scored well. After 70,400 practice drafts, the judge predicted Bolt's decks would win <b>3.9 percentage points</b> more often than the decks drafted by the people-copying version. That's a prediction, not real games. Keep that in mind.</p>
+          <p data-l="hobby">The judge predicts a deck's win rate from 674,000 real 17lands games, with the player's skill held fixed (good players build better decks <em>and</em> play them better, so it has to separate the two). The drafter then trained with reinforcement learning in a simulated 8-seat table: seven people-copying drafters and one learner, real packs, the judge's score as the reward, and a leash that keeps it from drifting too far from human drafting.</p>
+          <p data-l="hobby">A second judge, trained on different games and never used in training, graded the result: Bolt's decks <b>63.9%</b>, the people-copying decks <b>60.0%</b>, so <b>+3.9 points</b>. Along the way it took 14% fewer rares after pack 1 and found an open lane: White-Red, one of the set's strongest pairs in real games, but under 8% of the decks people actually play.</p>
+          <p data-l="tech">Judge: deck-level win-rate model with pilot skill as a covariate, calibrated to within about a point per quintile on 78,379 held-out games. Two judges on disjoint halves of the game data; RL (REINFORCE with a KL penalty to the imitation policy, 550 iterations, 70,400 simulated drafts) optimizes judge A and is graded by judge B on 512 held-out tables: <b>63.87% vs 60.02%, +3.85 ± 0.23</b>. Still 81% top-1 agreement with the human model. The second judge guards against reward hacking of judge A, but not against a blind spot both judges share, which is what the next chapters test.</p>
+          <p class="take" data-l="easy hobby tech"><b>The question:</b> the judge <em>predicted</em> Bolt's decks were better. Would they actually win more if the games were played?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4 engine ================= -->
+  <section class="sec" id="engine" aria-labelledby="engine-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">04 · The engine</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="engine-h">Building <em>the game</em></h2>
+        <div class="body">
+          <p data-l="easy">The only way to know if a deck wins is to play it. Thousands of times. So I wrote Magic itself as software: a <b>rules engine</b> that knows every rule, every card in the Foundations set (all 286), and what happens when cards interact. It handles all the bookkeeping automatically: whose turn it is, who can block, what triggers when a creature dies.</p>
+          <p data-l="easy">Every card has its own test, so I can prove it does what the card says. And it's fast: about 300 games a second.</p>
+          <p data-l="hobby">A Magic rules engine in Rust: turns and steps, priority and the stack, combat with first strike and trample, triggered and activated abilities, replacement effects, tokens, auras and equipment, and all 286 Foundations cards, each with a test written from its rules text. It hides what each player can't see. Python talks to it directly, so the AI code can run games in bulk: about 300 games a second with the rules-based player.</p>
+          <p data-l="tech">Rust, exposed to Python with PyO3. Cards are data in an effect language (each script declares the exact rules-text lines it implements, and a test fails if a script drifts from Scryfall's text), so support is provable per card. Priority/stack with state-based actions, combat (first strike, double strike, trample, menace), triggers, replacement effects, X costs, modal and kicker spells, planeswalkers. 376 rules tests. Per-seat observations hide hidden zones; RNG is seeded so stored results replay bit-for-bit. About 300 games/s with the heuristic pilot. Long runs once hit a memory-corruption bug that safe Rust shouldn't allow; games now run in a supervised worker process that restarts on death.</p>
+          <p class="take" data-l="easy hobby tech"><b>Why it matters:</b> everything after this point is measured by real played games, not predictions. The engine later became what people play on, too.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5 wrong ================= -->
+  <section class="sec" id="wrong" aria-labelledby="wrong-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">05 · The test</span></div>
+      <div>
+        <h2 id="wrong-h">The prediction <em>was wrong</em></h2>
+        <div class="body">
+          <p data-l="easy">I took Bolt's decks and the people-copying decks from the same tables and played each one against the same big group of people-copying decks. Over 670,000 games in all.</p>
+          <p data-l="easy">With the simple rules-based player running both sides, Bolt's decks won about <b>1.5 points</b> more. With the smart player, which thinks ahead, the edge was <b>gone</b>. Not 3.9 points. Basically nothing. The judge had been fooled, and so had I.</p>
+          <p data-l="hobby">Same 512 tables. Each deck, Bolt's and the people-copying one, played every deck in three separate fields of 64 people-copying decks. Both sides used the same player, so only the decks differ. Rules-based player: Bolt's decks +1.54 points. Smart 4 × 6: <b>−0.21</b>, no edge at all. Even the weakest smart player (1 × 2) erased most of it: a cliff, not a slope.</p>
+          <p data-l="tech">Paired evaluation: 512 held-out tables, each deck against every deck of three independent 64-deck imitation fields, both pilots, 196,224 games per pilot. Gap (bot − imitation): rules-based <b>+1.54 ± 0.66</b>; smart 1 × 2 +0.30; 2 × 4 −0.13; 4 × 6 <b>−0.21 ± 0.58</b>. The drop from rules-based to 1 × 2 is −1.24 ± 0.26 (paired, so much tighter than either estimate). Per-deck judge scores correlate with played results at only 0.12–0.15. Likeliest cause: a blind spot shared by both judges, which learned from human-built decks.</p>
+          <div class="card">
+            <h3>How much better Bolt's decks were, in points of win rate</h3>
+            <div class="bars">
+              <div class="bar"><span class="l">The judge's prediction</span><span class="t"><i style="width:calc(3.85 / 4.5 * 100%)"></i></span><span class="v">+3.9</span></div>
+              <div class="bar"><span class="l">Played, rules-based</span><span class="t"><i class="dim" style="width:calc(1.54 / 4.5 * 100%)"></i></span><span class="v">+1.5</span></div>
+              <div class="bar"><span class="l">Played, smart 4 × 6</span><span class="t"><i class="dim" style="width:0"></i></span><span class="v">−0.2</span></div>
+            </div>
+          </div>
+          <p class="take" data-l="easy hobby tech"><b>The lesson:</b> a model that predicts results can be fooled by the thing it's grading. The fix is to reward the real thing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6 real ================= -->
+  <section class="sec" id="real" aria-labelledby="real-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">06 · The drafter</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="real-h">Learning from <em>real games</em></h2>
+        <div class="body">
+          <p data-l="easy">So I threw out the judge's guesses. Now, after every practice draft, Bolt's deck actually plays the other seven decks at its table in the engine, and its real win rate is the reward. Decks that win teach it more.</p>
+          <p data-l="easy">Then the final exam: the same tables as before, but graded by the stronger smart player (4 × 6), which it never practiced with. <b>Bolt's decks won 62% of their games, where the people-copying decks won 50%.</b></p>
+          <p data-l="hobby">Training reward: after each simulated draft, seat 0's deck plays its seven tablemates twice each in the engine, with smart 1 × 2 on both sides, and its win rate is the reward. Graded the same way as before, against the same fields: with the stronger smart 4 × 6 (never trained against) Bolt's decks win <b>62.3%</b> where the people-copying decks win <b>49.6%</b>, a <b>+12.7-point</b> edge, on all three fields. The judge barely noticed the improvement (about +1.4): it found things that win games that the judge can't see.</p>
+          <p data-l="hobby">The first learning method got to +8.9. Switching to PPO, a more careful method, reached that level about 8 times faster and went further.</p>
+          <p data-l="tech">Reward = seat 0's played win rate vs its 7 tablemates (2 games each, smart 1 × 2 both sides). REINFORCE with a KL leash, 250 iterations (~450k training games): +8.88 ± 0.54 with 4 × 6. Then PPO (clipped objective, several epochs per batch of drafts): continued to iteration 345, <b>+12.67 ± 0.56 with smart 4 × 6</b> (62.3% vs 49.6%; fields +12.93 / +12.66 / +12.42), +16.00 ± 0.62 with 1 × 2 (trained-against), +17.36 ± 0.66 rules-based. From the same start, PPO matched REINFORCE's best in 30 iterations instead of 250, and over-optimized if left running (peak around iteration 120 in the from-scratch run, then decline): the same KL-leash lesson as RLHF. Judge B rates the change about +1.4.</p>
+          <div class="card">
+            <h3>Bolt's edge over the people-copying decks, smart 4 × 6 on both sides</h3>
+            <div class="bars">
+              <div class="bar"><span class="l">Trained on the judge</span><span class="t"><i class="dim" style="width:0"></i></span><span class="v">−0.2</span></div>
+              <div class="bar"><span class="l">Real games, first method</span><span class="t"><i style="width:calc(8.88 / 14 * 100%)"></i></span><span class="v">+8.9</span></div>
+              <div class="bar"><span class="l">Real games, PPO</span><span class="t"><i style="width:calc(12.67 / 14 * 100%)"></i></span><span class="v">+12.7</span></div>
+            </div>
+            <p class="note">Points of win rate against the same fields of people-copying decks. +12.7 is 62.3% vs 49.6%. The two decks never play each other here; both play the same opponents.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7 tournament ================= -->
+  <section class="sec" id="tournament" aria-labelledby="tour-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">07 · The drafter</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="tour-h">The <em>tournament</em></h2>
+        <div class="body">
+          <p data-l="easy hobby">The simplest test of all: five versions of the drafter, one from each stage, all drafted the same 512 tables. Then every version's deck played every other version's deck from the same table. 102,400 games.</p>
+          <p data-l="tech">Round robin of five drafters on 512 held-out tables, every pairing, 20 games per table per pairing, smart 4 × 6 on both sides: 102,400 games. Here the bots' decks do play each other.</p>
+          <figure>
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcset="../img/bolt-tournament-dark.png">
+              <img src="../img/bolt-tournament-light.png" width="1600" height="680" loading="lazy" style="width:100%;height:auto;border-radius:12px"
+                alt="Average win rate against the other four drafters' decks: PPO from scratch 58.4%, PPO continued 57.3%, trained on real games 52.7%, people-copying 40.9%, trained on the judge 40.7%.">
+            </picture>
+            <figcaption>Average win rate against the other four drafters' decks. PPO from scratch 58.4%, PPO continued 57.3%, real games (first method) 52.7%, people-copying 40.9%, trained on the judge 40.7%.</figcaption>
+          </figure>
+          <p data-l="easy">Every version trained on real games beat every version that wasn't. And the judge-trained version? Dead even with simply copying people, even though the judge said it was 4 points better.</p>
+          <p data-l="hobby tech">Every bot trained on played games beats every bot that wasn't (the PPO bots win 63–64% against the judge-trained and people-copying decks). Judge-trained vs people-copying: 50.1%, a tie. The two PPO bots tie each other; the one trained from scratch got there with about a third of the training.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 8 player ================= -->
+  <section class="sec" id="player" aria-labelledby="player-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">08 · The player</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="player-h">Teaching it <em>to play</em></h2>
+        <div class="body">
+          <p data-l="easy">Every result so far depends on who plays the games, and my best hand-built player is slow: it imagines 24 games before every single move. So I built AI #2, a neural network that plays Magic itself, deciding each move in one quick look.</p>
+          <p data-l="easy"><b>First try: copy the smart player.</b> It learned to make the same move 90.6% of the time, and still lost most of its games, winning only 44.6% against even the simple rules-based player. Copying the smart player's moves didn't copy its secret, which is thinking ahead.</p>
+          <p data-l="easy"><b>What worked: practice.</b> It played about 790,000 games, mostly against itself and its own earlier versions, and learned only from who won. The trick that made it work: giving each move credit for how much it improved its chances, instead of giving all hundred moves of a game the same final grade.</p>
+          <p data-l="hobby">The network sees what a player sees: its hand, both battlefields (power, toughness, tapped, attacking, blocking), graveyards, the stack, life totals and the size of the opponent's hand. It scores every legal move, from mulligans to blocks to instant-speed tricks.</p>
+          <p data-l="hobby">Copying smart 1 × 2 on 2.5 million decisions got 90.6% agreement but only 44.6% against rules-based. Self-play fixed it: games against a mix of opponents (rules-based, the smart players, its past versions, itself), rewarded only for winning. Two changes made the difference: crediting each move by how much it changed the network's own estimate of winning, and twice as many games per update. Before those, it stalled around 55%.</p>
+          <p data-l="tech"><b>Architecture:</b> transformer over one token per visible object (card embedding + zone + numeric features) and a globals token; each legal action is a token with pointers to the objects it names. Outputs a logit per action and a value. 0.9M parameters. Imperfect information is respected (opponent's hand is a count).</p>
+          <p data-l="tech"><b>Training:</b> behavior cloning on 2.5M smart-1×2 decisions (90.6% agreement, 44.6% vs rules-based); one DAgger round changed nothing, since the expert's edge is lookahead, which a reactive policy can't imitate. Then PPO self-play against a league (rules-based, smart, past checkpoints, self) with a KL leash to the starting policy. End-of-game credit only plateaued at 54.8%; <b>GAE (λ 0.95)</b> and 640 games per update (vs 320) took it to 71.1% / 65.4% / 55.0%. About 790,000 self-play games across four runs, on a laptop CPU.</p>
+          <div class="card">
+            <h3>The learned player's win rate, head to head</h3>
+            <div class="bars">
+              <div class="bar"><span class="l">vs Rules-based (Easy)</span><span class="t"><i style="width:75.9%"></i></span><span class="v">75.9%</span></div>
+              <div class="bar"><span class="l">vs Smart 1 × 2 (Medium)</span><span class="t"><i style="width:68.0%"></i></span><span class="v">68.0%</span></div>
+              <div class="bar"><span class="l">vs Smart 4 × 6 (Hard)</span><span class="t"><i style="width:57.9%"></i></span><span class="v">57.9%</span></div>
+            </div>
+            <p class="note">1,000 games per matchup on 500 pairs of decks it never trained on, each side played once; give or take about 1.5 points. For comparison, smart 4 × 6 beats rules-based 70.9% on the same decks.</p>
+            <div class="tw" data-l="hobby tech"><table>
+              <thead><tr><th>Version</th><th class="n">vs Rules</th><th class="n">vs 1 × 2</th><th class="n">vs 4 × 6</th></tr></thead>
+              <tbody>
+                <tr><td>Copying the smart player</td><td class="n">44.6%</td><td class="n">35.8%</td><td class="n">–</td></tr>
+                <tr><td>Practice, credit only at game end</td><td class="n">54.8%</td><td class="n">47.4%</td><td class="n">–</td></tr>
+                <tr><td>Practice, credit per move</td><td class="n">71.1%</td><td class="n">65.4%</td><td class="n">55.0%</td></tr>
+                <tr><td>Also sees the spell it's aiming</td><td class="n">75.9%</td><td class="n">68.0%</td><td class="n">57.9%</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <h3>A blind spot a person found</h3>
+          <p data-l="easy">The first time someone played against it, it cast a spell that makes a creature bigger (Giant Growth) on <em>their</em> creature. Oops. I measured it: when it could boost either side, it picked the opponent's creature 65% of the time. The reason: when it was choosing a target, it couldn't see which spell it was casting, so it couldn't tell "make bigger" from "destroy." It had learned "aim at their creatures," which is right for removal spells.</p>
+          <p data-l="hobby">In its first live game against a person, it cast Giant Growth on the person's creature. Measured over 200 games: when a pump spell or aura could go on either side, it chose the opponent's creature 65% of the time (47 of 72). The hand-built players never did. Cause: while targets are chosen, the engine hadn't put the spell on the stack yet, so the network couldn't see whether it was aiming Giant Growth or removal, and it had learned "target their creatures," right for removal 96% of the time.</p>
+          <p data-l="tech">First human playtest: it targeted the opponent's creature with Giant Growth. Measured: pumps/auras with a choice of side went to the opponent 65% (47/72) for the network, 0% for every heuristic pilot. Root cause was the observation, not the optimizer: during <code>ChooseTarget</code>, the spell being cast isn't on the stack yet, so the policy was conditioning on targets without the source. Fix: the engine now exposes the pending spell, encoded as a stack token. Continuing PPO from that checkpoint for 170 updates gave the stronger last row above, but pumps still go wrong 47% (34/73): the input is fixed, the learned habit isn't yet.</p>
+          <p class="take" data-l="easy hobby tech"><b>Where that stands:</b> in games against people, the Medium player picks the Expert's targets for now, so it never boosts your creatures. Teaching the player where pump spells go is on the list.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 9 regrade ================= -->
+  <section class="sec" id="regrade" aria-labelledby="regrade-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">09 · The test, again</span><span class="pill">Done</span></div>
+      <div>
+        <h2 id="regrade-h">Checking <em>everything again</em></h2>
+        <div class="body">
+          <p data-l="easy">With a stronger player available, I re-ran the drafting tests with the learned player running both sides. The 62% result held up: same edge. And one surprise: the judge-trained decks, which looked like no improvement with the smart player, did a bit better with the learned player (about +4.7 points). So "the edge disappears against good play" was really about that one player, not good play in general.</p>
+          <p data-l="hobby">The same 512 tables and fields, the learned player on both sides. The PPO drafter's edge: <b>+12.6 points</b>, the same as with smart 4 × 6. The judge-trained drafter's edge, erased by the smart player, came back at about <b>+4.7</b> on every field. The tournament order held: PPO bots on top, people-copying last. It's still far behind training on real games.</p>
+          <p data-l="tech">Learned player (the pre-fix v2 checkpoint) on both sides, all three fields, 65,408 games each: PPO drafter gap <b>+12.57 ± 0.58</b> (fields +12.64 / +12.56 / +12.51; smart 4 × 6 gave +12.67). Judge-trained drafter <b>+4.67 / +4.64 / +4.82</b> (smart 4 × 6: −0.16 / −0.09 / −0.37), and its per-deck results correlate a little better with judge B (0.21). Tournament averages with the learned player: 55.9 / 55.5 / 53.0 / 46.5 / 39.1. About 1.2% of the learned player's games hit the move cap (scored as draws) vs almost none for the heuristic pilots.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 10 online ================= -->
+  <section class="sec" id="online" aria-labelledby="online-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">10 · Online</span><span class="pill test">In testing</span></div>
+      <div>
+        <h2 id="online-h">Playing it <em>online</em></h2>
+        <div class="body">
+          <p data-l="easy">The engine doesn't just run experiments anymore. I put it online, so <a href="https://nerdleagues.com">Nerd Leagues</a> (the Magic website I co-founded) can run real games through it: you against Bolt, or two people against each other, with the engine handling every rule and trigger for you. A private Magic Arena, basically. You can also draft against seven Bolt bots, or pick your deck from a whole table they drafted.</p>
+          <p data-l="easy">You choose how hard Bolt plays: Easy, Medium, Hard or Expert, the four players from the start of this page. Right now it's open to Nerd Leagues' admins while we test it.</p>
+          <p data-l="hobby">A small web service sits on top of the engine. Nerd Leagues uses it for a "Practice vs Bolt" page: play a game against Bolt at Easy, Medium, Hard or Expert, play another person with the engine enforcing the rules, draft against seven bots (all Bolt, all people-style, or mixed), or choose a deck from a whole bot-drafted table. Each player only sees what they should see, every legal move comes with a readable label, and Bolt takes a short "thinking" pause so it doesn't feel robotic. Admin-only while it's tested.</p>
+          <p data-l="tech">FastAPI service (local, key-authenticated) over the engine: games with any mix of human and bot seats, per-seat views with hidden information removed, legal actions with readable labels and object references, frames between decisions, long-poll for the other player's move, versioned actions (stale clicks get 409), a public event log; drafts against 7 bots (one call per pick) and whole-table drafts with deck building. Nerd Leagues' "Practice vs Bolt" page is the first client: admin-only, with difficulty mapped to rules-based / smart 1 × 2 / smart 4 × 6 / learned player.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 11 limits ================= -->
+  <section class="sec" id="limits" aria-labelledby="limits-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">11 · Honest limits</span></div>
+      <div>
+        <h2 id="limits-h">What it <em>can't do yet</em></h2>
+        <div class="body">
+          <ul data-l="easy">
+            <li><b>It hasn't been measured against strong human players.</b> Every result here is against bots. The best player beats my best hand-built bot, which is still well below a skilled person.</li>
+            <li><b>The other drafters at the table are AIs</b> that copy people, not real people. A table of eight Bolts would fight over the same colors.</li>
+            <li><b>It still aims boost spells wrong about half the time</b>, so the Medium player picks its targets in live games.</li>
+            <li><b>One set so far:</b> Foundations, with two-player games.</li>
+          </ul>
+          <ul data-l="hobby tech">
+            <li><b>No human benchmark.</b> All pilots, the learned one included, are evaluated against bots. The learned player beats smart 4 × 6 at 57.9%, and 4 × 6 is far below a strong human, so decks that reward skilled play can look worse here than they are.</li>
+            <li><b>Simulated opponents.</b> The other seven seats are the imitation model, not people. The White-Red lean pays off because human-like drafters leave it open.</li>
+            <li><b>Targeting habit.</b> Pumps and auras still go to the opponent's side 47% of the time; the service routes the learned player's target choices to smart 1 × 2.</li>
+            <li><b>Scope.</b> Foundations only, two-player Limited. About 1.2% of the learned player's games hit the move cap.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 12 next ================= -->
+  <section class="sec" id="next" aria-labelledby="next-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">12 · Roadmap</span><span class="pill next">Next</span></div>
+      <div>
+        <h2 id="next-h">What's <em>next</em></h2>
+        <div class="body">
+          <ol>
+            <li><b>Aim boost spells properly.</b> <span data-l="easy hobby">Teach the player that Giant Growth goes on your own creature, then let it pick its own targets again.</span><span data-l="tech">A targeted fix for the pump habit (the input now carries the source), then retire the smart-player target routing.</span></li>
+            <li><b>A second set: Tarkir: Dragonstorm.</b> <span data-l="easy hobby">Its 17lands draft data is downloaded, and the engine can now hold more than one set. Next: a Tarkir drafter, then scripting its 270 cards so it can play them.</span><span data-l="tech">17lands data downloaded; the engine's card library is now per-set (Foundations unchanged, Tarkir loaded in 17lands' column order, 18 of 270 cards supported via shared scripts). Imitation drafter first, then card scripting for played training.</span></li>
+            <li><b>Opening it up.</b> <span data-l="easy hobby tech">More testing on Nerd Leagues before anyone beyond its admins can play.</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="sec" id="faq" aria-labelledby="faq-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">13 · FAQ</span></div>
+      <div>
+        <h2 id="faq-h">Questions <em>people ask</em></h2>
+        <div class="faq">
+          <details><summary>What does Bolt actually do, in one sentence?</summary><div>
+            <p data-l="easy hobby">It drafts Magic cards and builds a deck that wins more than the decks people build, and a second AI plays those games well enough to beat every bot I built by hand.</p>
+            <p data-l="tech">A pick policy (imitation, then RL on played outcomes) plus a self-play play policy, both evaluated in a Rust rules engine I wrote, served over a FastAPI service.</p></div></details>
+          <details><summary>Why is drafting hard for an AI?</summary><div>
+            <p data-l="easy hobby">Every pick depends on what you already took and what you'll probably see later. The best card in a pack can be the wrong pick if it's in the wrong color. And you only find out if you drafted well after playing a lot of games, which is noisy because Magic has a lot of luck.</p>
+            <p data-l="tech">Sequential decisions with a long-delayed, noisy reward (the deck's win rate, observed only through stochastic games), hidden information about other seats, and a combinatorial pool-dependence. That's why the work moved from a learned proxy reward to played outcomes, with paired evaluation to cut variance.</p></div></details>
+          <details><summary>Why only 70.5% matching people?</summary><div>
+            <p data-l="easy hobby">Because people disagree. Two strong players often take different cards from the same pack, and both are fine. The goal isn't 100%; it's beating the simple bots by a wide margin, which it does (70.5% vs 46.9%).</p>
+            <p data-l="tech">Human pick labels are noisy (inter-player disagreement, misclicks, collection-driven picks), so top-1 agreement has a low ceiling. The informative comparison is against pool-blind baselines (pick-order 46.9%) and the per-pick curve, where the gap peaks mid-pack once colors are set.</p></div></details>
+          <details><summary>What was the judge, and why was it wrong?</summary><div>
+            <p data-l="easy hobby">The judge was a model I trained to predict how often a deck wins. Bolt learned to build decks the judge liked, but when the games were actually played, most of that edge disappeared. Both judges learned from decks people built, so they probably shared a blind spot that Bolt found and exploited.</p>
+            <p data-l="tech">A learned reward model. RL optimized judge A; judge B (disjoint data) still rated it +3.85 ± 0.23, but played results showed +1.54 (rules-based) and −0.21 (smart 4 × 6), with per-deck correlation 0.12–0.15. Classic proxy-reward over-optimization: the two judges guard against hacking one judge, not against a bias both share.</p></div></details>
+          <details><summary>Why build a whole rules engine?</summary><div>
+            <p data-l="easy hobby">To stop guessing. The only honest way to know a deck is good is to play it thousands of times, and no existing tool let me do that at that speed for every card in the set. It caught my own mistake, and now it powers online play too.</p>
+            <p data-l="tech">Ground-truth evaluation and a reward signal at scale (~300 games/s), with deterministic replay, per-seat information hiding, and per-card tests. It turned a proxy-metric project into one measured on outcomes, and it's the substrate for the play policy and the service.</p></div></details>
+          <details><summary>What do "1 × 2" and "4 × 6" mean?</summary><div>
+            <p data-l="easy hobby">They describe the smart players. Before each move, the smart player takes its best-looking options (the second number) and imagines playing each one to the end of the game a few times (the first number). 1 × 2 imagines 2 games per move; 4 × 6 imagines 24. More imagining makes it stronger and slower.</p>
+            <p data-l="tech">Rollouts × candidates: k candidate actions, each evaluated by r determinized rollouts to the end of the game (hidden cards resampled), keeping the one that wins most. 1 × 2 = 2 rollouts per decision, 4 × 6 = 24.</p></div></details>
+          <details><summary>Why did copying the smart player fail?</summary><div>
+            <p data-l="easy hobby">The smart player is strong because it thinks ahead. A copy of its moves can't think ahead, so it learned the habits without the reason behind them: it made the same move 90.6% of the time and still lost.</p>
+            <p data-l="tech">The expert's advantage lives in search, not in a reactive mapping from state to action. Behavior cloning matched 90.6% of decisions but the remaining errors compound over ~100-move games, and DAgger can't add the lookahead the student lacks. Self-play with returns, not imitation, was the fix.</p></div></details>
+          <details><summary>What made self-play work?</summary><div>
+            <p data-l="easy hobby">Two things. First, judging each move by how much it changed its chances of winning, not just whether the whole game was won. Second, more games per lesson, so each lesson was less about luck.</p>
+            <p data-l="tech">GAE (λ 0.95) for per-step advantages from the value head instead of terminal-only Monte Carlo returns, and 640 games per update instead of 320 to reduce gradient variance; plus a league of opponents and a KL leash. Without those it plateaued near 55% vs rules-based and drifted once the leash loosened.</p></div></details>
+          <details><summary>Why PPO instead of the first method?</summary><div>
+            <p data-l="easy hobby">PPO learns more from each batch of practice, carefully. It reached the first method's best result about 8 times faster and then went further.</p>
+            <p data-l="tech">PPO's clipped surrogate allows several epochs per batch of drafts without destructive updates. From the same start it matched REINFORCE's best (+12.15 vs +11.40, 1 × 2 eval) in 30 iterations vs 250. It also over-optimizes if run too long, so the KL leash and checkpoint selection matter.</p></div></details>
+          <details><summary>Is it better than human players?</summary><div>
+            <p data-l="easy hobby">I don't know yet, and I won't claim it. Every result is against bots. Its decks beat the people-copying AI's decks, and the player beats my best hand-built bot, but no one has measured it against strong people.</p>
+            <p data-l="tech">Unmeasured. The comparisons are against the imitation model's decks and heuristic pilots. A human benchmark (and an Elo against people) is the missing evaluation.</p></div></details>
+          <details><summary>What went wrong along the way?</summary><div>
+            <p data-l="easy hobby">The judge's prediction (chapter 5). The Giant Growth blind spot (chapter 8). Copying the smart player didn't work. Running two big training jobs at once froze my laptop, so now everything runs one at a time with memory limits. And a rare crash in the engine meant games now run in a separate process that restarts itself.</p>
+            <p data-l="tech">Proxy-reward over-optimization; a missing observation feature (pending spell during targeting); behavior cloning without search; memory blowups (fixed with compact arrays, smaller eval batches, per-job caps); a rare memory-corruption crash in long engine runs, isolated in a supervised worker; an MPS NaN that hung the machine, fixed by masking before attention.</p></div></details>
+          <details><summary>What would you do differently?</summary><div>
+            <p data-l="easy hobby">Build the game engine first. I spent a while trusting a model's predictions before I could check them with real games. And give the player the full picture of every decision from day one, since the Giant Growth bug came from something it simply couldn't see.</p>
+            <p data-l="tech">Ground-truth evaluation before proxy rewards; audit the observation for every decision type (targets, modes, payments) before training a policy on it; and build a per-decision behavioral test suite (e.g. "pumps target own creatures") alongside win-rate evals, since aggregate win rate hid the bug.</p></div></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="foot">
+    <div class="row">
+      <a class="btn solid" href="https://github.com/AdamLiscia/bolt-the-bird">Read the code on GitHub</a>
+      <a class="btn" href="/#work">Back to my work</a>
+      <a class="btn" href="mailto:adamliscia@gmail.com">Email me</a>
+    </div>
+    <p class="note" style="margin-top:22px;max-width:var(--read)">Every number on this page comes from a results file in the repository. Draft and game data: <a href="https://www.17lands.com/public_datasets">17lands public datasets</a> (CC BY 4.0). Magic: The Gathering is a trademark of Wizards of the Coast; this is an independent project.</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Adam Liscia · New York</span>
+    <span>Bolt the Bird, updated 24 Nov 2026</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btns=document.querySelectorAll('.seg button');
+  function set(l, save){
+    root.setAttribute('data-level', l);
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.set===l)); });
+    if(save){ try{ localStorage.setItem('bolt-level', l); }catch(e){} }
+  }
+  set(root.getAttribute('data-level')||'easy', false);
+  btns.forEach(function(b){ b.addEventListener('click', function(){
+    // keep the reader's place: remember the section in view, restore it after the text changes length
+    var secs=[].slice.call(document.querySelectorAll('section[id]')), cur=null;
+    for(var i=0;i<secs.length;i++){ if(secs[i].getBoundingClientRect().top<160) cur=secs[i]; }
+    set(b.dataset.set, true);
+    if(cur && cur.id!=='top'){ cur.scrollIntoView({block:'start'}); }
+  }); });
+})();
+</script>
+</body>
+</html>

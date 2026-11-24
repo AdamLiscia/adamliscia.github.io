@@ -380,15 +380,16 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
           <span class="case-num rv">02</span>
           <div class="rv d1">
             <h3>Bolt the Bird</h3>
-            <p class="tagline">An AI that drafts Magic: The Gathering, and learned to build
-              winning decks from real games.</p>
+            <p class="tagline">An AI that drafts Magic: The Gathering, learned to build
+              winning decks from real games, and taught itself to play them.</p>
           </div>
         </div>
         <div class="case-body">
           <dl class="meta rv">
             <div><dt class="mono">Role</dt><dd>Solo ML Engineer</dd></div>
             <div><dt class="mono">Timeline</dt><dd>Nov 2026 – present</dd></div>
-            <div><dt class="mono">Built with</dt><dd>Python, PyTorch</dd></div>
+            <div><dt class="mono">Built with</dt><dd>Python, PyTorch, Rust, FastAPI</dd></div>
+            <div><dt class="mono">Story</dt><dd><a href="bolt/">The whole story</a></dd></div>
             <div><dt class="mono">Code</dt><dd><a href="https://github.com/AdamLiscia/bolt-the-bird">GitHub</a></dd></div>
           </dl>
           <div>
@@ -404,13 +405,18 @@ footer .note{font-family:var(--mono); font-size:11px; letter-spacing:.04em; max-
                 to build winning decks. A scoring model I built predicted they'd win 3.9 points
                 more often. To check, I built a Magic game engine that plays every card in the
                 set, and the prediction was wrong. Retrained on real game results, <strong>its
-                decks now win 62% of games where human-style decks win 50%.</strong></p>
+                decks now win 62% of games where human-style decks win 50%.</strong> Then I trained a
+                game-playing AI with reinforcement learning and self-play: after about 790,000
+                games, it beats the strongest player I'd built into the engine 58% of the time.</p>
               <ul class="features rv d1">
                 <li>Learned from 5.5 million real picks</li>
-                <li>A Magic game engine that plays every card in the set</li>
+                <li>A Magic rules engine in Rust that plays every card in the set</li>
                 <li>Reinforcement learning on real game results</li>
                 <li>Every version tested head to head, over 100,000 games</li>
+                <li>A game-playing AI trained with reinforcement learning and self-play</li>
+                <li>Online drafts and games on Nerd Leagues, now in testing</li>
               </ul>
+              <p class="rv d1" style="margin-top:18px"><a href="bolt/" style="text-decoration:underline;text-underline-offset:4px">Read the whole story, at three reading levels →</a></p>
             </div>
           </div>
         </div>
