@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en" data-level="easy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BarCraft — Adam Liscia</title>
+<meta name="description" content="The story of BarCraft: a cocktail app for working bartenders, built solo by Adam Liscia after the first version failed. Readable at three levels.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://adamliscia.com/barcraft/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BarCraft — the whole story">
+<meta property="og:description" content="A cocktail app for working bartenders: any recipe in the fewest taps, your own specs, and batching done right. Easy, Hobbyist or Technical.">
+<meta property="og:url" content="https://adamliscia.com/barcraft/">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101828'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' font-style='italic' fill='%23E2B26A' text-anchor='middle'>C</text></svg>">
+<script>
+// Reading level: URL (?level=) > saved choice > Easy. Set before paint so the page never flashes.
+(function(){
+  var ok={easy:1,hobby:1,tech:1}, l=null;
+  try{ l=new URLSearchParams(location.search).get('level'); }catch(e){}
+  if(!ok[l]){ try{ l=localStorage.getItem('site-level')||localStorage.getItem('bolt-level'); }catch(e){} }
+  if(ok[l]) document.documentElement.setAttribute('data-level', l);
+  document.documentElement.classList.add('js');
+})();
+</script>
+<style>
+:root{
+  --bg:#F5F4F0; --bg-2:#ECEAE3; --surface:#FFFFFF; --ink:#101828; --ink-2:#475467;
+  --ink-3:#6B7385; --line:#DEDBD2; --line-2:#CBC7BC; --accent:#A0692A;
+  --accent-soft:#E2B26A; --stage:#101828; --stage-2:#18223A; --stage-ink:#EEF1F6;
+  --stage-dim:#98A2B3; --stage-line:#273352; --ok:#2F9E6B; --warn:#B7791F; --next:#5B6B8C;
+  --bar:#A0692A; --bar-2:#CBC7BC;
+  --wrap:1120px; --read:68ch; --gutter:clamp(16px,4.5vw,56px);
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:Geist,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0B0F19; --bg-2:#111726; --surface:#131A2A; --ink:#EEF1F6; --ink-2:#A9B2C3;
+    --ink-3:#8A94A8; --line:#1F2738; --line-2:#2B3549; --accent:#E2B26A; --accent-soft:#E2B26A;
+    --stage:#121929; --stage-2:#182136; --stage-line:#26314A; --ok:#4CC38A; --warn:#E0A645; --next:#8EA0C4;
+    --bar:#E2B26A; --bar-2:#2B3549;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:132px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
+img{max-width:100%; display:block}
+a{color:inherit}
+p a, li a, dd a, td a{color:var(--accent); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
+::selection{background:var(--accent-soft); color:#101828}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter)}
+.mono{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+.skip{position:absolute; left:-9999px} .skip:focus{left:16px; top:16px; z-index:99; background:var(--surface); padding:8px 12px; border-radius:6px}
+code{font-family:var(--mono); font-size:.88em; background:var(--bg-2); padding:1px 5px; border-radius:4px}
+
+/* ---- reading levels: an element is shown at the levels in its data-l ---- */
+html[data-level="easy"]  [data-l]:not([data-l~="easy"]),
+html[data-level="hobby"] [data-l]:not([data-l~="hobby"]),
+html[data-level="tech"]  [data-l]:not([data-l~="tech"]){display:none}
+
+/* ---- nav + level switch (sticky together) ---- */
+.top{position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter:saturate(1.4) blur(14px); -webkit-backdrop-filter:saturate(1.4) blur(14px); border-bottom:1px solid var(--line)}
+.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:64px; flex-wrap:wrap; padding-top:8px; padding-bottom:8px}
+.brand{font-family:var(--serif); font-size:22px; letter-spacing:-.01em; line-height:1; text-decoration:none; white-space:nowrap}
+.brand i{color:var(--accent)}
+.levels{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.levels .mono{color:var(--ink-3)}
+.seg{display:inline-flex; background:var(--bg-2); border:1px solid var(--line); border-radius:999px; padding:3px}
+.seg button{font:500 14px var(--sans); color:var(--ink-2); background:transparent; border:0; padding:7px 14px; border-radius:999px; cursor:pointer; min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--bg)}
+.nojs-note{font-size:13px; color:var(--ink-3)}
+html.js .nojs-note{display:none}
+html:not(.js) .seg{display:none}
+
+/* ---- hero ---- */
+.hero{padding:clamp(48px,8vw,110px) 0 clamp(36px,5vw,64px)}
+.crumb{font-size:14px; color:var(--ink-3)} .crumb a{color:var(--ink-2); text-decoration:none} .crumb a:hover{color:var(--ink)}
+.hero h1{font-family:var(--serif); font-weight:400; font-size:clamp(3rem,9vw,6.6rem); line-height:.98; letter-spacing:-.025em; margin:22px 0 0}
+.hero h1 em{font-style:italic; color:var(--accent)}
+.lede{font-size:clamp(1.1rem,2vw,1.3rem); color:var(--ink-2); max-width:var(--read); margin:26px 0 0}
+.lede strong{color:var(--ink); font-weight:500}
+.meta-row{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:26px; font-size:14px; color:var(--ink-3)}
+.meta-row a{color:var(--ink-2)}
+
+/* ---- status board ---- */
+.board{background:var(--stage); color:var(--stage-ink); border-radius:22px; padding:clamp(20px,3.5vw,36px); display:grid; gap:22px}
+.board h2{font-family:var(--serif); font-weight:400; font-size:clamp(1.7rem,3.4vw,2.4rem); margin:0; line-height:1.1}
+.board .mono{color:var(--stage-dim)}
+.statuses{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px}
+.st{background:var(--stage-2); border:1px solid var(--stage-line); border-radius:14px; padding:16px; display:grid; gap:6px; align-content:start}
+.st b{font-weight:500; font-size:15.5px}
+.st span{font-size:14px; color:var(--stage-dim); line-height:1.5}
+.pill{display:inline-flex; align-items:center; gap:7px; font:500 11.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase}
+.pill::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.pill.done{color:#4CC38A} .pill.test{color:#E0A645} .pill.next{color:#9FB2D8}
+.nums{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px 22px; border-top:1px solid var(--stage-line); padding-top:22px}
+.nums div{display:grid; gap:4px}
+.nums b{font:500 clamp(1.6rem,3vw,2.1rem)/1.05 var(--mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.nums span{font-size:13.5px; color:var(--stage-dim); line-height:1.45}
+
+/* ---- contents ---- */
+.toc{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:4px 28px; margin:0; padding:0; list-style:none; counter-reset:t}
+.toc li{counter-increment:t; border-top:1px solid var(--line)}
+.toc a{display:flex; gap:12px; padding:11px 0; text-decoration:none; color:var(--ink-2); font-size:15.5px}
+.toc a::before{content:counter(t,decimal-leading-zero); font:500 12px/1.9 var(--mono); color:var(--accent)}
+.toc a:hover{color:var(--ink)}
+
+/* ---- chapters ---- */
+.sec{padding:clamp(44px,7vw,88px) 0; border-top:1px solid var(--line)}
+.sec-grid{display:grid; gap:18px}
+@media (min-width:960px){.sec-grid{grid-template-columns:200px minmax(0,1fr); gap:48px}}
+.sec-side{display:grid; gap:10px; align-content:start}
+.sec-side .mono{color:var(--accent)}
+.sec-side .pill{color:var(--ok)} .sec-side .pill.test{color:var(--warn)} .sec-side .pill.next{color:var(--next)}
+@media (min-width:960px){.sec-side{position:sticky; top:150px}}
+.sec h2{font-family:var(--serif); font-weight:400; font-size:clamp(2rem,4.2vw,3.1rem); line-height:1.04; letter-spacing:-.02em; margin:0 0 18px; max-width:20ch}
+.sec h2 em{font-style:italic; color:var(--ink-3)}
+.body{max-width:var(--read); display:grid; gap:16px; min-width:0}
+.body p{margin:0}
+.body h3{font-size:1.08rem; font-weight:600; margin:10px 0 -4px}
+.body ul, .body ol{margin:0; padding-left:1.2em; display:grid; gap:6px}
+.take{border-left:3px solid var(--accent); background:var(--surface); padding:14px 18px; border-radius:0 12px 12px 0; font-size:1rem}
+.take b{font-weight:600}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:clamp(16px,2.6vw,24px); display:grid; gap:14px; min-width:0}
+.card h3{margin:0; font-size:1rem}
+.note{font-size:14px; color:var(--ink-3); line-height:1.55}
+.term{font-family:var(--mono); font-size:.86em; color:var(--ink-2)}
+
+/* bars (HTML, no chart library) */
+.bars{display:grid; gap:10px}
+.bar{display:grid; grid-template-columns:minmax(0,190px) minmax(0,1fr) 62px; gap:12px; align-items:center}
+.bar .l{font-size:14.5px; font-weight:500}
+.bar .t{height:14px; background:var(--bg-2); border-radius:0 4px 4px 0; position:relative; overflow:hidden}
+.bar .t i{position:absolute; inset:0 auto 0 0; background:var(--bar); border-radius:0 4px 4px 0}
+.bar .t i.dim{background:var(--bar-2)}
+.bar .v{font:500 14px var(--mono); text-align:right; font-variant-numeric:tabular-nums}
+@media (max-width:560px){.bar{grid-template-columns:minmax(0,1fr) 62px} .bar .t{grid-column:1 / -1; grid-row:2}}
+
+table{border-collapse:collapse; width:100%; font-size:14.5px}
+th,td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-weight:600; color:var(--ink-2); font-size:13.5px}
+td.n, th.n{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.tw{overflow-x:auto; -webkit-overflow-scrolling:touch}
+
+/* cast of players */
+.cast{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.who{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; display:grid; gap:6px; align-content:start}
+.who .lvl{font:500 11.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.who b{font-size:1.05rem; font-weight:600}
+.who p{margin:0; font-size:14.5px; color:var(--ink-2)}
+.who.learned{border-color:var(--accent)}
+
+figure{margin:0}
+figcaption{font-size:14px; color:var(--ink-3); margin-top:10px}
+
+/* FAQ */
+.faq{display:grid; gap:10px; max-width:var(--read)}
+details{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:0 18px}
+summary{cursor:pointer; list-style:none; padding:16px 28px 16px 0; font-weight:600; font-size:1.02rem; position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+"; position:absolute; right:0; top:13px; font:400 22px/1 var(--mono); color:var(--ink-3)}
+details[open] summary::after{content:"−"}
+details > div{padding:0 0 18px; display:grid; gap:12px; color:var(--ink-2)}
+details > div p{margin:0}
+
+/* foot */
+.foot{padding:clamp(48px,7vw,90px) 0; border-top:1px solid var(--line)}
+.foot .row{display:flex; flex-wrap:wrap; gap:12px}
+.btn{display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; font-size:15px; font-weight:500;
+  border:1px solid var(--line-2); background:var(--surface); text-decoration:none; transition:transform .25s var(--ease), border-color .2s}
+.btn:hover{transform:translateY(-1px); border-color:var(--ink-3)}
+.btn.solid{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+footer{padding:22px 0 40px; font-size:13.5px; color:var(--ink-3)}
+footer .wrap{display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:space-between}
+@media (max-width:560px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))} .levels .mono{display:none} .top .wrap{min-height:56px}}
+
+/* ---- page links in the header (shared by every story page) ---- */
+.pages{display:flex; gap:2px; align-items:center; margin-right:auto; margin-left:10px}
+.pages a{font-size:14.5px; color:var(--ink-2); text-decoration:none; padding:7px 11px; border-radius:999px; white-space:nowrap}
+.pages a:hover{color:var(--ink)}
+.pages a[aria-current="page"]{color:var(--ink); background:var(--bg-2); box-shadow:inset 0 0 0 1px var(--line)}
+@media (max-width:1080px){.levels{width:100%}}
+@media (max-width:560px){.pages{margin-left:0} .pages a{padding:6px 8px; font-size:14px} .pages .long{display:none}}
+@media (max-width:380px){.top .brand{font-size:19px} .pages a{padding:5px 6px; font-size:13.5px}}
+/* screenshots (same as the home page) */
+.stage{border-radius:22px; padding:clamp(28px,5vw,56px) clamp(16px,4vw,48px) 0; background:var(--bg-2); overflow:hidden}
+.stage.dark{background:var(--stage)}
+.phones{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(10px,2.4vw,24px); max-width:640px; margin:0 auto; align-items:end}
+.phones figure{margin:0}
+.phones figure:nth-child(2){transform:translateY(-6%)}
+.phones img{width:100%; height:auto; border-radius:clamp(12px,2vw,24px) clamp(12px,2vw,24px) 0 0; box-shadow:0 30px 60px -20px rgba(16,24,40,.35), 0 0 0 1px rgba(16,24,40,.06)}
+.links-row{display:flex; flex-wrap:wrap; gap:10px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Adam Liscia, home">Adam&nbsp;<i>Liscia</i></a>
+    <nav class="pages" aria-label="Projects">
+      <a href="/nerd-leagues/">Nerd Leagues</a>
+      <a href="/bolt/">Bolt<span class="long"> the Bird</span></a>
+      <a href="/barcraft/" aria-current="page">BarCraft</a>
+    </nav>
+    <div class="levels" role="group" aria-label="Reading level">
+      <span class="mono">Reading level</span>
+      <div class="seg">
+        <button type="button" data-set="easy" aria-pressed="true">Easy</button>
+        <button type="button" data-set="hobby" aria-pressed="false">Hobbyist</button>
+        <button type="button" data-set="tech" aria-pressed="false">Technical</button>
+      </div>
+      <span class="nojs-note">Showing the Easy version. Turn on JavaScript to switch levels.</span>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+  <!-- ================= hero ================= -->
+  <section class="hero" id="top">
+    <div class="crumb"><a href="/">adamliscia.com</a> / <a href="/#work">Work</a> / BarCraft</div>
+    <h1>Bar<em>Craft</em></h1>
+    <p class="lede" data-l="easy">An iPhone app for bartenders. Find any cocktail recipe in a couple of taps, change it to the way you make it, and work out a big batch for a party without doing math on a napkin. I built every part of it myself, after my first attempt at the idea collapsed under its own weight.</p>
+    <p class="lede" data-l="hobby">A cocktail spec app for <strong>working bartenders</strong> and serious home bartenders: search a library of classics and modern classics, edit any spec into your version, write your own syrups and use them as ingredients, batch any drink with dilution, and talk a drink through with an AI mentor. On the App Store since July 2026.</p>
+    <p class="lede" data-l="tech"><strong>FastAPI</strong> + SQLAlchemy 2 / Alembic on MySQL (RDS), an <strong>Expo / React Native</strong> client that talks to the API only through a client generated from its OpenAPI schema, shared TypeScript domain logic for the batch and unit math, an Electron curator app for me, and Claude behind the Mentor (SSE streaming, per-tier models) and the admin content tools. Solo, deployed on EC2.</p>
+    <p class="lede" data-l="easy hobby tech" style="font-size:1rem">Switch the <b>reading level</b> at the top at any time. Every section rewrites itself, from no jargon at all to the real terms.</p>
+    <div class="meta-row">
+      <span>Founder &amp; sole engineer · Jun 2025 – present</span>
+      <span>iOS</span>
+      <a href="https://barcraft.bar">barcraft.bar</a>
+      <a href="https://apps.apple.com/us/app/barcraft-cocktail-recipes/id6783025586">App Store</a>
+      <span>Updated 25 Nov 2026</span>
+    </div>
+  </section>
+
+  <!-- ================= status ================= -->
+  <section class="board" aria-labelledby="status-h">
+    <span class="mono">Where it stands</span>
+    <h2 id="status-h">The current status</h2>
+    <div class="statuses">
+      <div class="st"><span class="pill done">Live</span><b>The iPhone app</b><span>BarCraft: Cocktail Recipes, on the App Store since 22 July 2026.</span></div>
+      <div class="st"><span class="pill done">Live</span><b>The server</b><span>Accounts, recipes, the feed and the AI mentor, live in production.</span></div>
+      <div class="st"><span class="pill test">In progress</span><b>The AI mentor</b><span>Chat works today. Next: attaching a drink mid-sentence, and sending it a photo.</span></div>
+      <div class="st"><span class="pill next">Not yet</span><b>Google Play</b><span>The Android version builds and installs. A Play Store listing needs a testing round first.</span></div>
+      <div class="st"><span class="pill next">Not yet</span><b>BarCraft Pro</b><span>A $5-a-month tier is designed. Billing isn't built.</span></div>
+    </div>
+    <div class="nums">
+      <div><b>&lt; 5 s</b><span>the goal for finding any recipe in the library</span></div>
+      <div><b>&lt; 1 min</b><span>the goal for saving a recipe of your own</span></div>
+      <div><b>1</b><span>codebase for iPhone, Android and web</span></div>
+    </div>
+  </section>
+
+  <!-- ================= contents ================= -->
+  <section class="sec" aria-labelledby="toc-h" style="border-top:0">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">Contents</span></div>
+      <div>
+        <h2 id="toc-h" style="position:absolute;left:-9999px">Contents</h2>
+        <ol class="toc">
+          <li><a href="#moment">The moment it's built for</a></li>
+          <li><a href="#failed">The first version failed</a></li>
+          <li><a href="#rule">One rule</a></li>
+          <li><a href="#find">Finding a drink</a></li>
+          <li><a href="#yours">Making it yours</a></li>
+          <li><a href="#syrups">Homemade syrups</a></li>
+          <li><a href="#batch">The batch calculator</a></li>
+          <li><a href="#mentor">The AI mentor</a></li>
+          <li><a href="#store">Getting into the App Store</a></li>
+          <li><a href="#back">The tools only I see</a></li>
+          <li><a href="#next">What's not done</a></li>
+          <li><a href="#faq">Questions people ask</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 1 moment ================= -->
+  <section class="sec" id="moment" aria-labelledby="mo-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">01 · Start here</span></div>
+      <div>
+        <h2 id="mo-h">The moment <em>it's built for</em></h2>
+        <div class="body">
+          <p data-l="easy">Picture a bartender on a busy night. The bar is three deep, both hands are full, and someone orders a drink they make twice a year. They need the recipe now, not after scrolling through a recipe blog's life story. That moment is what BarCraft is for: <b>any recipe in under five seconds, in as few taps as possible.</b></p>
+          <p data-l="easy">I know that moment because I work it. I've bartended for years, and making big batches of cocktails ahead of a shift is part of the job where I work now. BarCraft is the tool I wanted behind the bar.</p>
+          <p data-l="hobby">Built for service: behind the bar, hands busy, a guest orders something off-menu and you need the spec in under five seconds. It's also for the managers who build drink menus and batch for the week, and for anyone mixing at home who wants their own specs in one place. It grew out of my own bartending, where batching is part of the shift.</p>
+          <p data-l="tech">The design target is a single user story: a bartender mid-shift needs a spec in under five seconds. Every screen defers to it: lookup is the home screen, and reading never sits behind a sign-in wall. Secondary users (menu builders, home bartenders) get the same app, not a separate mode.</p>
+          <div class="stage dark">
+            <div class="phones">
+              <figure><img src="../img/bc-cocktails.jpg" width="600" height="1299" loading="lazy" alt="BarCraft cocktail library on iPhone."></figure>
+              <figure><img src="../img/bc-batch.jpg" width="600" height="1299" loading="lazy" alt="BarCraft batch calculator: a recipe scaled up to 20 drinks, with the amount of each ingredient worked out."></figure>
+              <figure><img src="../img/bc-edit.jpg" width="600" height="1299" loading="lazy" alt="Editing a cocktail recipe in BarCraft."></figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2 failed ================= -->
+  <section class="sec" id="failed" aria-labelledby="fa-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">02 · Version one</span></div>
+      <div>
+        <h2 id="fa-h">The first version <em>failed</em></h2>
+        <div class="body">
+          <p data-l="easy">BarCraft started in June 2025 under another name, <b>Bar Tools Pro</b>, and I kept adding to it. Accounts for owners, managers and bartenders, each with different permissions. Training games and leaderboards. Cost calculators. Staff reports. Guides to wine, beer and spirits. A blog. Every idea was a good one. None of them was what a bartender reaches for in the middle of a shift.</p>
+          <p data-l="easy">It grew until it was too big to change safely. So in June 2026 I threw the whole thing out and started over, with a written list of everything the new version would <em>not</em> do.</p>
+          <p data-l="hobby">Bar Tools Pro, June 2025: roles for owners, managers and bartenders with a permission matrix, training games, leaderboards, cost and pour calculators, employee analytics, education hubs, a blog, lead generation. All cool, none of it what you need on the rail. The main server file reached 654 KB. In June 2026 I scrapped it and rebuilt from nothing as BarCraft.</p>
+          <p data-l="tech">Bar Tools Pro's <code>app.py</code> reached 654 KB: every feature in one file, roles and permission matrices threaded through all of it. Rather than refactor, I rebuilt from zero in June 2026 behind an explicit scope document and a numbered decision log, as a monorepo with real boundaries: <code>apps/api</code>, <code>apps/mobile</code>, <code>apps/desktop</code>, <code>apps/landing</code>, <code>packages/shared</code>.</p>
+          <p class="take" data-l="easy hobby tech"><b>What I learned:</b> a product dies from the features you add as much as the ones you don't. Deciding what to leave out is the job.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3 rule ================= -->
+  <section class="sec" id="rule" aria-labelledby="ru-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">03 · The rebuild</span></div>
+      <div>
+        <h2 id="ru-h">One <em>rule</em></h2>
+        <div class="body">
+          <p class="take" data-l="easy hobby tech" style="font-size:1.15rem"><b>"If a feature doesn't help a bartender in the moment, it waits."</b></p>
+          <p data-l="easy">Every new idea has to answer one question: does a bartender need this during a shift? If the honest answer is "it would be nice for managers" or "it would be fun," it goes on a someday list instead of into the app. The someday list isn't a graveyard; it's how the app stays small enough to finish.</p>
+          <p data-l="hobby">The "someday / never" list for v1: team and venue accounts, comments and follows, costing and inventory, training games, education hubs. Each is parked, not forbidden. What made the cut: lookup, your own specs, recipes, the batch calculator, a simple feed, and later the Mentor.</p>
+          <p data-l="tech">Scope lives in <code>docs/01-vision-and-scope.md</code>, and every non-obvious choice gets an entry in a numbered decision log with the reasoning, now up to D69. Parked items are listed explicitly so a new idea is checked against them instead of quietly creeping in. The log is also how reversals stay honest: D36 reverses an earlier database decision and says why.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4 find ================= -->
+  <section class="sec" id="find" aria-labelledby="fi-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">04 · Lookup</span><span class="pill">Live</span></div>
+      <div>
+        <h2 id="fi-h">Finding <em>a drink</em></h2>
+        <div class="body">
+          <p data-l="easy">Open the app and you're already on the search screen. Type a few letters of a drink's name, or the name of a spirit, and the list narrows as you type. Each drink is labeled with what it's built on, like gin or whiskey, and alcohol-free drinks are clearly marked so you never hand one to the wrong guest.</p>
+          <p data-l="hobby">Search the classics, modern classics and your own specs by name, spirit or style. Typing an ingredient offers a chip ("+ Mezcal"), and stacking chips finds every drink with all of them. Each row carries a base-spirit badge (Gin, Whiskey, Rum, Agave, Wine, Liqueur, Zero-Proof), with a real zero-proof filter. Show amounts in ounces or milliliters.</p>
+          <p data-l="tech">Search covers canon and the user's own rows in one result set. The base-spirit badge is derived by priority order from ingredient families; the labels live in <code>packages/shared</code> as a mirror of the server's enum so no client invents its own wording. Units are stored canonically in ml and displayed in the user's choice; ml display uses the 30 ml bar ounce snapped to a 2.5 ml grid, so a metric spec reads like one a bartender would write. A classifier filled every drink's alcoholic flag and spirit family in production with nothing left unmatched.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5 yours ================= -->
+  <section class="sec" id="yours" aria-labelledby="yo-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">05 · Your specs</span><span class="pill">Live</span></div>
+      <div>
+        <h2 id="yo-h">Making it <em>yours</em></h2>
+        <div class="body">
+          <p data-l="easy">Every bartender makes a classic a little differently. In BarCraft you can change any recipe to match how you make it. You get your own copy, the original stays the same for everyone else, and you can go back to the original any time. Drinks you never make can be hidden so your list stays short.</p>
+          <p data-l="hobby">Edit any classic and BarCraft quietly forks your own version: your spec shows up wherever that drink does, the shared original is untouched, and Reset brings it back. Write originals from scratch, hide the classics you never pour, and save someone else's public spec from the feed as your own editable copy.</p>
+          <p data-l="tech">Copy-on-write is the heart of the data model: one <code>cocktails</code> table where <code>owner_id IS NULL</code> is shared canon. Editing a classic never mutates it; the server forks one private row (<code>forked_from_id</code>, <code>owner_id</code> = user) and edits that. Reset deletes the fork, hide is a row in <code>user_hidden_library</code>, saving from the feed forks a public cocktail. Fork and ownership logic is strictly server-side, so no client can get it wrong.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6 syrups ================= -->
+  <section class="sec" id="syrups" aria-labelledby="sy-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">06 · Recipes</span><span class="pill">Live</span></div>
+      <div>
+        <h2 id="sy-h">Homemade <em>syrups</em></h2>
+        <div class="body">
+          <p data-l="easy">Good bars make their own ingredients: flavored syrups, infusions, house mixes. In BarCraft you write those recipes too, with how much each one makes, and then use them inside your cocktail recipes like any bottle on the shelf. Need more? Double it, or tell it "make 2 liters," and it works out every amount.</p>
+          <p data-l="hobby">Syrups, tinctures, cordials and infusions, each with a yield, usable as an ingredient in any cocktail. Scale a recipe by ½× to 4× or to a target ("Make 2 L"), with rounding a bartender would actually measure: 2.5 and 5 ml steps, bar fractions under 4 oz, whole dashes.</p>
+          <p data-l="tech">Each ingredient line points at exactly one of: a base ingredient, a user recipe, or free text. Recipe scaling lives in <code>packages/shared</code> (<code>scale.ts</code>, unit-tested) and rounds after display conversion, only when scaled; <code>part</code> lines never scale. Recipe reads work signed out (canon only; private rows 404 rather than 401), and every write still needs a user.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7 batch ================= -->
+  <section class="sec" id="batch" aria-labelledby="ba-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">07 · Batching</span><span class="pill">Live</span></div>
+      <div>
+        <h2 id="ba-h">The batch <em>calculator</em></h2>
+        <div class="body">
+          <p data-l="easy">For a party, you don't make 50 drinks one at a time. You mix them ahead in big bottles. Doing that math by hand is where mistakes happen, especially the part people forget: when you shake a drink with ice, some of the ice melts into it. A batched drink has no ice, so you have to add that water yourself, or every drink comes out too strong.</p>
+          <p data-l="easy">BarCraft does all of it. Pick a drink, say how many, and it tells you every amount, the water to add, how much of each homemade syrup to make, and how many bottles it fills.</p>
+          <p data-l="hobby">Load any cocktail, scale by drink count or by target volume, and optionally add dilution (the water the ice would have added; it's off until you switch it on). Carbonated toppers stay out of the batch and are listed per drink, recipe ingredients tell you how many batches to prep, and the total comes with a container fit.</p>
+          <p data-l="tech">Pure, unit-tested logic in <code>packages/shared/batch.ts</code>, shared by every client. Sum the non-carbonated volumetric lines, scale by count (or target volume ÷ diluted single-drink volume), add dilution water as an explicit line, compute prep for recipe lines as scaled ml ÷ yield, then container fit as ceil(total ÷ container). Defaults by method when dilution is on: shake 25%, stir 18%, build 0%.</p>
+          <div class="card">
+            <h3>Worked example: 50 Daiquiris, shaken, 25% dilution</h3>
+            <div class="tw"><table>
+              <tbody>
+                <tr><td>One drink: 2 oz rum, 1 oz lime, ¾ oz simple syrup</td><td class="n">110.9 ml</td></tr>
+                <tr><td>Times 50</td><td class="n">5,545 ml</td></tr>
+                <tr><td>Water the ice would have added (25%)</td><td class="n">1,386 ml</td></tr>
+                <tr><td>Simple syrup needed: 1,109 ml from a 750 ml recipe</td><td class="n">2 batches</td></tr>
+                <tr><td><b>Total, and the bottles it fills</b></td><td class="n"><b>6,931 ml · 10 × 750 ml</b></td></tr>
+              </tbody>
+            </table></div>
+            <p class="note">The example from BarCraft's batch calculator spec. Leave out the water and every one of those 50 drinks is a quarter too strong.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 8 mentor ================= -->
+  <section class="sec" id="mentor" aria-labelledby="me-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">08 · AI mentor</span><span class="pill test">In progress</span></div>
+      <div>
+        <h2 id="me-h">The AI <em>mentor</em></h2>
+        <div class="body">
+          <p data-l="easy">The Mentor is like having a senior bartender to ask. Show it one of your recipes and ask how to make it less sweet, or describe a drink a guest wants and ask for ideas. When it suggests a recipe, it hands you a card you can save straight into your library, or tweak first.</p>
+          <p data-l="hobby">A hospitality-mentor chat: attach any cocktail or recipe from your library, talk it through, and when it proposes a spec it comes back as a card you can save as-is or edit before saving. Conversations are kept so you can pick one back up. Sign-in only, with sensible limits.</p>
+          <p data-l="tech">Claude over Server-Sent Events, proxied by nginx with streaming-aware config. The model is resolved per user: Free gets Haiku, Pro and admins get Sonnet, an admin can grant a per-user override (Opus included), and a global "force a model" switch is there for emergencies. Every message records which model answered, for cost attribution. Rate limits are 10 a minute and 200 a day. Proposed specs come back as cards, ready to save or edit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 9 store ================= -->
+  <section class="sec" id="store" aria-labelledby="st-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">09 · Shipping</span><span class="pill">Live</span></div>
+      <div>
+        <h2 id="st-h">Getting into <em>the App Store</em></h2>
+        <div class="body">
+          <p data-l="easy">Apple reviews every app before it goes live, and the first answer was no. The reason had nothing to do with the app itself: apps about alcohol aren't allowed in every country, and I had it listed everywhere. Once I picked the right countries, it went through. BarCraft went live on <b>22 July 2026</b>.</p>
+          <p data-l="easy">Because people can share their own recipes, Apple also requires ways to keep that safe: reporting a post, blocking a person, agreeing to terms when you sign up, and tools for me to take something down. I built all of those before launch.</p>
+          <p data-l="hobby">The first submission was rejected over country availability (alcohol content isn't allowed in every storefront), a fix in App Store Connect rather than in code. Because the feed is user-generated, Apple's rules also require report and block, a terms agreement at sign-in, a blocked-users screen and takedown tooling, all built for launch. The feed itself has likes and saves, and no comments on purpose.</p>
+          <p data-l="tech">Shipped 2026-07-22 as BarCraft: Cocktail Recipes (<code>social.barcraft.app</code>). First rejection: territory availability for alcohol content, fixed in App Store Connect. UGC compliance for Guideline 1.2: report a cocktail, block a user, a Terms/EULA + sign-in agreement gate, a blocked-users screen, and operator takedown in the desktop curator. Shipping a change is two deploys: the server first, then an <code>eas update</code> over the air for the app, pinned to its runtime version. Sign in with Apple and Google: the server verifies the provider's <code>id_token</code> and issues its own JWT and refresh tokens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 10 back ================= -->
+  <section class="sec" id="back" aria-labelledby="bk-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">10 · Behind the bar</span></div>
+      <div>
+        <h2 id="bk-h">The tools <em>only I see</em></h2>
+        <div class="body">
+          <p data-l="easy">Running an app takes its own tools. I built a desktop app just for me: it's where I edit the shared recipe library, use AI tools to help write new recipes, see how people use the Mentor, take down anything that breaks the rules, and write the posts for BarCraft's blog.</p>
+          <p data-l="hobby">A Mac app for running BarCraft: edit the library, generate cocktails, recipes and metric specs with AI written in the voice of a set of bartender personas, a user list with each person's Mentor use, moderation and takedowns, and the blog editor that publishes barcraft.bar's posts in one click.</p>
+          <p data-l="tech">An Electron curator app (macOS) on the same API, gated by <code>is_admin</code> and revocable personal access tokens. LLM workflows for cocktail, recipe and metric-spec generation run on an admin-selected model from curated craft personas, with a missing → pending → live review state for metric specs. A users CRM with per-user content counts and Mentor spend. The blog engine is calendar-first, renders through a dependency-free static exporter with JSON-LD and a sitemap, and publishes with one API call. Discord webhooks send signup alerts and daily and weekly digests from systemd timers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 11 next ================= -->
+  <section class="sec" id="next" aria-labelledby="nx-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">11 · Honest limits</span><span class="pill next">Next</span></div>
+      <div>
+        <h2 id="nx-h">What's <em>not done</em></h2>
+        <div class="body">
+          <ul data-l="easy">
+            <li><b>It's iPhone only for now.</b> The Android version works and installs, but Google requires a new app from a personal account to be tested by 12 people for 14 days in a row before it can go in the Play Store.</li>
+            <li><b>There's no paid version yet.</b> A $5-a-month Pro tier is planned, but nothing is charged.</li>
+            <li><b>The Mentor is still growing:</b> next, attaching a drink in the middle of a message, and sending it a photo.</li>
+          </ul>
+          <ul data-l="hobby tech">
+            <li><b>Google Play.</b> Production access for a personal developer account needs a closed test with 12 testers for 14 continuous days, per app. For now an Android build installs directly; revisit with an organization account.</li>
+            <li><b>Billing.</b> Freemium + $5/month Pro is decided (D37); <code>is_pro</code> is a manual flag today and enforces nothing.</li>
+            <li><b>Mentor.</b> Inline @-mention attach, image input, and on-device QA remain.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="sec" id="faq" aria-labelledby="faq-h">
+    <div class="sec-grid">
+      <div class="sec-side"><span class="mono">12 · FAQ</span></div>
+      <div>
+        <h2 id="faq-h">Questions <em>people ask</em></h2>
+        <div class="faq">
+          <details><summary>What is BarCraft, in one sentence?</summary><div>
+            <p data-l="easy hobby">The fastest way for a working bartender to look up a cocktail recipe, save their own, and batch it.</p>
+            <p data-l="tech">A FastAPI + MySQL service with a single Expo / React Native client for iOS, Android and web, built around a copy-on-write recipe model and shared batch math.</p></div></details>
+          <details><summary>Why start over instead of fixing the first version?</summary><div>
+            <p data-l="easy hobby">Because the problem wasn't one bug, it was the size of it. Every feature was tangled up with every other one. Starting fresh, with a short written list of what the app would and wouldn't do, gave me something small enough to finish, and the second version shipped.</p>
+            <p data-l="tech">The coupling was structural: roles and permissions threaded through one 654 KB file with no seams to refactor along. The rewrite started with module boundaries, a shared domain package, migrations from day one and a decision log.</p></div></details>
+          <details><summary>Do you actually bartend?</summary><div>
+            <p data-l="easy hobby tech">Yes. I've worked in hospitality for over a decade and I bartend now. Batching is part of the shift where I work, which is where the batch calculator came from.</p></div></details>
+          <details><summary>Why no comments on the feed?</summary><div>
+            <p data-l="easy hobby tech">Comments are on the someday list: they don't help anyone make a drink mid-shift. Likes and "save a copy" cover what you want from someone else's recipe.</p></div></details>
+          <details><summary>Why iPhone first?</summary><div>
+            <p data-l="easy hobby tech">The app is one codebase for iPhone, Android and the web, so Android isn't a rewrite. It's waiting on Google's testing requirement for new apps, described above.</p></div></details>
+          <details><summary>What's it built with?</summary><div>
+            <p data-l="easy hobby">Python on the server, and one app written in React Native that runs on iPhone, Android and the web. AI from Anthropic's Claude.</p>
+            <p data-l="tech">FastAPI, SQLAlchemy 2, Alembic, Pydantic v2, MySQL on RDS, S3 presigned uploads through an EC2 instance role, gunicorn + uvicorn under systemd behind nginx; Expo SDK 54, Expo Router, React Native, React 19, TypeScript with an OpenAPI-generated client; Electron for the curator; Anthropic's API.</p></div></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="foot">
+    <div class="row">
+      <a class="btn solid" href="https://apps.apple.com/us/app/barcraft-cocktail-recipes/id6783025586">Get it on the App Store</a>
+      <a class="btn" href="https://barcraft.bar">barcraft.bar</a>
+      <a class="btn" href="/#work">Back to my work</a>
+      <a class="btn" href="mailto:adamliscia@gmail.com">Email me</a>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Adam Liscia · New York</span>
+    <span>BarCraft, updated 25 Nov 2026</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, btns=document.querySelectorAll('.seg button');
+  function set(l, save){
+    root.setAttribute('data-level', l);
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.set===l)); });
+    if(save){ try{ localStorage.setItem('site-level', l); }catch(e){} }
+  }
+  set(root.getAttribute('data-level')||'easy', false);
+  btns.forEach(function(b){ b.addEventListener('click', function(){
+    // keep the reader's place: remember the section in view, restore it after the text changes length
+    var secs=[].slice.call(document.querySelectorAll('section[id]')), cur=null;
+    for(var i=0;i<secs.length;i++){ if(secs[i].getBoundingClientRect().top<160) cur=secs[i]; }
+    set(b.dataset.set, true);
+    if(cur && cur.id!=='top'){ cur.scrollIntoView({block:'start'}); }
+  }); });
+})();
+</script>
+</body>
+</html>
